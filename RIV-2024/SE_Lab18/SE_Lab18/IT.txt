@@ -1,0 +1,10 @@
+   id       datatype    idtype      Line     Scope     value
+getSum_1       INT         F         1         -         0
+    a_1       INT         P         1         getSum         0
+    b_1       INT         P         1         getSum         0
+ main_5       INT         V         5         -         0
+    a_6       INT         V         6         main         0
+   L0_7      BYTE         L         7         -         3
+   L1_8      BYTE         L         8         -         2
+   L3_10       STR         L        10         L1      "OK"
+   L4_13      BYTE         L        13         -         0

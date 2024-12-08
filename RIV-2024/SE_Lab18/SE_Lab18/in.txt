@@ -1,0 +1,14 @@
+int function getSum(int a, int b) {
+    return a+b;
+};
+
+main {
+let int a;
+a = 3;
+if (a > 2)
+{
+print("OK");
+}
+
+return 0;
+}
