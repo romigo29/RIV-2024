@@ -35,6 +35,7 @@ namespace LA
             FST_PRINT
             FST_LITERAL
             FST_IF
+            FST_ELSE
             FST_IDENF
   
 
@@ -50,6 +51,7 @@ namespace LA
             {_print, LEX_PRINT, nullptr},
             {literal_int, LEX_LITERAL, nullptr},
             {_if, LEX_IF, nullptr},
+            {_else, LEX_ELSE, nullptr},
             {idenf, LEX_ID, nullptr}
             
         };

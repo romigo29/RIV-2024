@@ -1,4 +1,4 @@
-﻿Сборка начата 08.12.2024 01:14:35.
+﻿Сборка начата 10.12.2024 10:14:06.
 Уровень детализации журнала: Normal.     1>Проект "D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\SE_Lab18.vcxproj" в узле 2 (целевые объекты Build).
      1>PrepareForBuild:
          Структурированный вывод включен. Форматирование диагностики компилятора будет отражать иерархию ошибок. Подробнее см. https://aka.ms/cpp/structured-output.
@@ -20,6 +20,7 @@
          Debug\MFST.obj
          Debug\Out.obj
          Debug\Parm.obj
+         Debug\PolishNotation.obj
          "Debug\RIV-2024.obj"
          SE_Lab18.vcxproj -> D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\Debug\SE_Lab18.exe
        FinalizeBuildStatus:

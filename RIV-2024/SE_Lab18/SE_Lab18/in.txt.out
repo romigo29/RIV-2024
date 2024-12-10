@@ -3,12 +3,27 @@ return a+b;
 };
 
 main{
+
+let byte b1=3&5;
+let byte v2=~4;
 let int a;
+let int b=5;
+
 a=3;
-if(a>2)
-{
+let int c=getSum(4,5);
+print(c);
+
+let ch symbol='I';
+let str stroka="dont mind";
+print("Ğ^Ñ^Ğ^Ğ^Ğ^ Ñ^Ñ^Ñ^Ğ^Ğ^Ğ^");
+
+if(a>2){
 print("OK");
 }
 
-return 0;
+else{
+print("NO");
+}
+
+return done;
 }

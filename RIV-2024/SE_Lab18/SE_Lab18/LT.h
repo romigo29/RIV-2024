@@ -15,6 +15,7 @@
 #define LEX_PRINT 'p'
 #define LEX_MAIN 'm'
 #define LEX_IF 's'
+#define LEX_ELSE 'e'
 #define LEX_SEMICOLON ';'
 #define LEX_COMMA ','
 #define LEX_LEFTBRACE '{'
@@ -27,7 +28,6 @@
 #define LEX_LESS '<'
 #define LEX_GE 'g' //>=
 #define LEX_LE 'u' //<=
-
 
 namespace LT
 {
