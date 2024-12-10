@@ -40,4 +40,29 @@ namespace LT
 		lextable.size = 0;
 		lextable.maxsize = 0;
 	}
+
+	void PrintLT(LexTable& lexTable) {
+		int currentLine = 1;
+		LT::Entry current_entry_LT;
+
+		ofstream LT_file_modified;
+		LT_file_modified.open("LT_modified.txt");
+		LT_file_modified << currentLine;
+		LT_file_modified << '\t';
+		for (int i = 0; i < lexTable.size; i++)
+		{
+			current_entry_LT = LT::GetEntry(lexTable, i);
+			if (currentLine != current_entry_LT.sn)
+			{
+				currentLine = current_entry_LT.sn;
+				LT_file_modified << '\n';
+				LT_file_modified << currentLine;
+				LT_file_modified << '\t';
+			}
+
+			LT_file_modified << current_entry_LT.lexema[0];
+		}
+
+		LT_file_modified.close();
+	}
 }

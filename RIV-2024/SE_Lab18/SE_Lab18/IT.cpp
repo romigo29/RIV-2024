@@ -2,7 +2,6 @@
 #include "Error.h"
 #include"stdafx.h"
 
-
 namespace IT
 {
 	IdTable Create(int size)

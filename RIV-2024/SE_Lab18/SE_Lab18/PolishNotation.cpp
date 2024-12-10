@@ -1,151 +1,142 @@
-//#include "stdafx.h"
-//#include "LA.h"
-//#include <stack>
-//#include <queue>
-//#include <sstream>
-//#include <string>
-//#include <iostream>
-//#include <fstream>
-//#include <cstdlib>
-//#include <cstring>
-//
-//using namespace std;
-//
-//bool PolishNotation(int i, LT::LexTable& lextable, IT::IdTable& idtable)
-//{
-//	stack<LT::Entry> stack;		// стек для операций
-//	queue<LT::Entry> queue;		// очередь для операндов
-//	LT::Entry temp;
-//	temp.idxTI = -1;
-//	temp.lexema[0] = '#';
-//	temp.sn = -1;
-//	LT::Entry func;
-//	func.lexema[0] = '@';
-//	LT::Entry commas;
-//	int countComma = 0;			//подсчет количества запятых
-//	char* comma = new char[1] { "" };
-//	int countLex = 0;			// количество преобразованных лексем
-//	int posLex = i;				// запоминаем номер лексемы перед преобразованием
-//	bool findFunc = false;
-//
-//
-//	for (i; lextable.table[i].lexema[0] != LEX_SEMICOLON; i++, countLex++)
-//	{
-//		switch (lextable.table[i].lexema[0])
-//		{
-//		case LEX_ID:	// если идентификатор
-//		{
-//			queue.push(lextable.table[i]);   // помещаем в очередь
-//			continue;
-//		}
-//		case LEX_LITERAL:		// если литерал
-//		{
-//			queue.push(lextable.table[i]);	// помещаем в очередь
-//			continue;
-//		}
-//		case LEX_LEFTTHESIS:		// если (
-//		{
-//			if (idtable.table[lextable.table[i - 1].idxTI].idtype == IT::F)
-//				findFunc = true;
-//			stack.push(lextable.table[i]); // помещаем ее в стек
-//			continue;
-//		}
-//		case LEX_RIGHTTHESIS:	// если )
-//		{
-//			if (findFunc)
-//			{
-//				itoa(++countComma, comma, 10); //количество запятых
-//				strcpy(commas.lexema, comma);
-//				stack.push(commas);
-//				stack.push(func);
-//				findFunc = false;
-//			}
-//			while (stack.top().lexema[0] != LEX_LEFTTHESIS)	// пока не встретим (
-//			{
-//				queue.push(stack.top());	// выталкиваем из стека в очередь
-//				stack.pop();
-//
-//				if (stack.empty())
-//					return false;
-//			}
-//			stack.pop();	// уничтожаем (
-//			continue;
-//		}
-//		case LEX_OPERATION:	// если знак оператора
-//		{
-//			while (!stack.empty() && lextable.table[i].priority <= stack.top().priority)
-//				// пока приоритет текущего оператора 
-//				//меньше или равен приоритету оператора в вершине стека
-//			{
-//				queue.push(stack.top());	// выталкиваем со стека в выходную строку
-//				stack.pop();
-//			}
-//			stack.push(lextable.table[i]);
-//			continue;
-//		}
-//		case LEX_COMMA:
-//		{
-//			countComma++;
-//			continue;
-//		}
-//		}
-//	}
-//	while (!stack.empty())	// если стек не пустой
-//	{
-//		if (stack.top().lexema[0] == LEX_LEFTTHESIS || stack.top().lexema[0] == LEX_RIGHTTHESIS)
-//			return false;
-//		queue.push(stack.top());	// выталкиваем все в очередь
-//		stack.pop();
-//	}
-//	while (countLex != 0)		// замена текущего выражения в таблице лексем на выражение в ПОЛИЗ
-//	{
-//		if (!queue.empty()) {
-//			lextable.table[posLex++] = queue.front();
-//			//cout << lex.idtable.table[queue.front().idxTI].id;	// вывод в консоль
-//			queue.pop();
-//		}
-//		else
-//		{
-//			lextable.table[posLex++] = temp;
-//		}
-//		countLex--;
-//	}
-//
-//	for (int i = 0; i < posLex; i++)		// восстановление индексов первого вхождения 
-//		//в таблицу лексем у операторов из таблицы идентификаторов
-//	{
-//		if (lextable.table[i].lexema[0] == LEX_OPERATION || lextable.table[i].lexema[0] == LEX_LITERAL)
-//			idtable.table[lextable.table[i].idxTI].idxfirstLE = i;
-//	}
-//	return true;
-//}
-//
-//
-//void WritePolishNotationToFile(const char* filename, LT::LexTable& lt) {
-//	ofstream outfile(filename);
-//
-//	if (!outfile.is_open()) {
-//		cout << "Unable to open file for writing." << endl;
-//		return;
-//	}
-//
-//	int line = 1;
-//	outfile << "\n";
-//	outfile << "Таблица лексем:\n\n";
-//	outfile << line << "  ";
-//	for (int i = 0; i < lt.size; i++)
-//	{
-//		if (lt.table[i].lexema[0] == ';' || lt.table[i].lexema[0] == '[')
-//		{
-//			outfile << lt.table[i].lexema[0];
-//			line++;
-//			outfile << '\n';
-//			outfile << line << "  ";
-//			continue;
-//		}
-//
-//		outfile << lt.table[i].lexema[0];
-//	}
-//
-//	outfile.close();
-//}
+#include "PolishNotation.h"
+
+map<char, int>Priorities = {
+	{'<',0},
+	{'>',0},
+	{'(',0},
+	{')',0},
+	{',',1},
+	{'~',1},
+	{'+',2},
+	{'-',2},
+	{'*',3},
+	{'/',3},
+	{'&',3},
+	{'|',3},
+	{'?',3}
+};
+
+
+namespace PN {
+
+	bool polishNotation(int i, LA::LEX& lex)
+	{
+
+		std::stack<LT::Entry> stack;
+		std::queue<LT::Entry> queue;
+
+		LT::Entry aggregate_symbol;
+		aggregate_symbol.idxTI = -1;
+		aggregate_symbol.lexema[0] = '#';
+		aggregate_symbol.sn = lex.lexTable.table[i].sn;
+
+		LT::Entry function_symbol;
+		function_symbol.idxTI = LT_TI_NULLIDX;
+		function_symbol.lexema[0] = '@';
+		function_symbol.sn = lex.lexTable.table[i].sn;
+		int idx;
+
+		int lexem_counter = 0;
+		int parm_counter = 0;
+		int lexem_position = i;
+		char* buf = new char[i];
+
+		bool is_function = false;
+
+		for (i; lex.lexTable.table[i].lexema[0] != LEX_SEMICOLON; i++, lexem_counter++) {
+			switch (lex.lexTable.table[i].lexema[0]) {
+			case LEX_ID:
+			case LEX_LITERAL:
+				if (lex.idTable.table[lex.lexTable.table[i].idxTI].idtype == IT::F) {
+					is_function = true;
+					idx = lex.lexTable.table[i].idxTI;
+				}
+				else {
+					if (is_function)
+						parm_counter++;
+					queue.push(lex.lexTable.table[i]);
+				}
+				continue;
+
+			case LEFTTHESIS:
+				stack.push(lex.lexTable.table[i]);
+				continue;
+
+			case RIGHTTHESIS:
+				while (stack.top().lexema[0] != LEFTTHESIS) {
+					queue.push(stack.top());
+					stack.pop();
+					if (stack.empty())
+						return false;
+				}
+
+				if (!is_function)
+					stack.pop();
+				else {
+					function_symbol.idxTI = idx;
+					idx = LT_TI_NULLIDX;
+					lex.lexTable.table[i] = function_symbol;
+					queue.push(lex.lexTable.table[i]);
+					_itoa_s(parm_counter, buf, 2, 10);
+					stack.top().lexema[0] = buf[0];
+					stack.top().idxTI = LT_TI_NULLIDX;
+					stack.top().sn = function_symbol.sn;
+					queue.push(stack.top());
+					stack.pop();
+					parm_counter = 0;
+					is_function = false;
+				}
+				continue;
+
+			case LEX_OPERATION:
+				while (!stack.empty() && Priorities[lex.lexTable.table[i].lexema[0]] > Priorities[stack.top().lexema[0]]) { //!!!!!!!!!!!!!!
+					queue.push(stack.top());
+					stack.pop();
+				}
+				stack.push(lex.lexTable.table[i]);
+				continue;
+			}
+		}
+
+		while (!stack.empty()) {
+			if (stack.top().lexema[0] == LEFTTHESIS || stack.top().lexema[0] == RIGHTTHESIS)
+				return false;
+
+			queue.push(stack.top());
+			stack.pop();
+		}
+
+		while (lexem_counter != 0) {
+			if (!queue.empty()) {
+				lex.lexTable.table[lexem_position++] = queue.front();
+				queue.pop();
+			}
+			else
+				lex.lexTable.table[lexem_position++] = aggregate_symbol;
+
+			lexem_counter--;
+		}
+
+		for (int i = 0; i < lexem_position; i++) {
+			if (lex.lexTable.table[i].lexema[0] == LEX_OPERATION || lex.lexTable.table[i].lexema[0] == LEX_LITERAL)
+				lex.idTable.table[lex.lexTable.table[i].idxTI].idxfirstLE = i;
+		}
+
+		return true;
+	}
+	
+	bool startPolish(LA::LEX& lex)
+	{
+		bool result = false;
+		for (int i = 0; i < lex.lexTable.size; i++) {
+			if (lex.lexTable.table[i].lexema[0] == '=') {
+				result = polishNotation(i + 1, lex);
+				if (!result) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+}

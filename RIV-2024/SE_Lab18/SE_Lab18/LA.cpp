@@ -37,7 +37,6 @@ namespace LA
             FST_IF
             FST_ELSE
             FST_IDENF
-  
 
             FstLexeme lexemes[] = {
             {_byte, LEX_BYTE, &byteFlag},
@@ -128,7 +127,7 @@ namespace LA
                     current_entry_IT.idtype = IT::L;
                     current_entry_IT.iddatatype = IT::INT;
                     sprintf_s(current_entry_IT.id, "L%d", number_literal);
-                    if (in.text[i - strlen(str) - 1] == MINUS && in.text[i - strlen(str)] != SPACE)
+                    if (in.text[i - strlen(str) - 1] == MINUS && in.text[i - strlen(str)] != SPACE && !isdigit(in.text[i - strlen(str) - 2]))
                     {
                         current_entry_IT.value.vint = -atoi(str);
                         if (str[0] == '0')

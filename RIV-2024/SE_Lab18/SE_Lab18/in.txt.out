@@ -1,7 +1,3 @@
-int function getSum(int a,int b){
-return a+b;
-};
-
 main{
 
 let byte b1=3&5;
@@ -15,14 +11,11 @@ print(c);
 
 let ch symbol='I';
 let str stroka="dont mind";
-print("Р^С^Р^Р^Р^ С^С^С^Р^Р^Р^");
+print("Вывод строки");
 
-if(a>2){
+if(a>2)
+{
 print("OK");
-}
-
-else{
-print("NO");
 }
 
 return done;

@@ -47,4 +47,5 @@ namespace LT
 	void Add(LexTable& lextable, Entry entry);
 	Entry GetEntry(LexTable& lextable, int n);
 	void Delete(LexTable& lextable);
+	void PrintLT(LexTable& lextable);
 }

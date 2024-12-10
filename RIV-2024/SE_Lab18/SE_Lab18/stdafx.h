@@ -10,8 +10,10 @@
 #include <string>
 #include <cstdarg>
 #include <stack>
+#include <queue>
+#include <map>
 #include "Out.h"
-#include "Error.h"		//обработка ошибок
+#include "Error.h"		
 #include "Parm.h"		
 #include "Log.h"		
 #include "In.h"			

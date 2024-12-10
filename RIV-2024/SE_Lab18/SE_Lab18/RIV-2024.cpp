@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MFST.h"
+#include "PolishNotation.h"
 
 int _tmain(int argc, _TCHAR* argv[]) {
 
@@ -36,12 +37,24 @@ int _tmain(int argc, _TCHAR* argv[]) {
         Out::CloseOut(out);
 
         LA::LEX LexTables = LA::LA(parm, in);
-       MFST_TRACE_START
+
+       /*MFST_TRACE_START
             MFST::Mfst mfst(LexTables.lexTable, GRB::getGreibach());
 
         mfst.start();
         mfst.savededucation();
-        mfst.printrules();
+        mfst.printrules();*/
+
+        if (PN::startPolish(LexTables)) {
+            cout << "\nПольская запись построена\n";
+        }
+        else {
+            cout << "\nПольская запись не построена\n";
+        }
+
+        LT::PrintLT(LexTables.lexTable);
+
+
 
     }
     catch (Error::ERROR e)

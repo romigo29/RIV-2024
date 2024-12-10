@@ -63,9 +63,11 @@ namespace GRB
 			Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F'))
 		),
 		Rule(NS('M'), GRB_ERROR_SERIES + 2,			//Выражение
-			4,		//M →vE|vEM
+			6,		//M →vE|vEM
 			Rule::Chain(2, TS('>'), NS('E')),
 			Rule::Chain(2, TS('<'), NS('E')),
+			Rule::Chain(2, TS('g'), NS('E')),
+			Rule::Chain(2, TS('u'), NS('E')),
 			Rule::Chain(2, TS('v'), NS('E')),
 			Rule::Chain(3, TS('v'), NS('E'), NS('M'))
 		)

@@ -1,4 +1,4 @@
-﻿Сборка начата 10.12.2024 10:14:06.
+﻿Сборка начата 11.12.2024 01:34:38.
 Уровень детализации журнала: Normal.     1>Проект "D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\SE_Lab18.vcxproj" в узле 2 (целевые объекты Build).
      1>PrepareForBuild:
          Структурированный вывод включен. Форматирование диагностики компилятора будет отражать иерархию ошибок. Подробнее см. https://aka.ms/cpp/structured-output.
@@ -6,8 +6,18 @@
          Создание "Debug\SE_Lab18.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
          Обращение к "Debug\SE_Lab18.tlog\unsuccessfulbuild".
        ClCompile:
-         C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX86\x86\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W3 /Gd /TP /analyze- /FC /errorReport:prompt GRB.cpp
-         GRB.cpp
+         C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX86\x86\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++20 /permissive- /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W3 /Gd /TP /analyze- /FC /errorReport:prompt PolishNotation.cpp
+         PolishNotation.cpp
+     1>D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
+         (компиляция исходного файла "PolishNotation.cpp")
+             D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\In.h(6,9):
+             см. предыдущее определение "SINGLE_QUOTE"
+         
+     1>D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
+         (компиляция исходного файла "PolishNotation.cpp")
+             D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\In.h(5,9):
+             см. предыдущее определение "DOUBLE_QUOTE"
+         
        Link:
          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX86\x86\link.exe /ERRORREPORT:PROMPT /OUT:"D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\Debug\SE_Lab18.exe" /INCREMENTAL /ILK:"Debug\SE_Lab18.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\Debug\SE_Lab18.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\Debug\SE_Lab18.lib" /MACHINE:X86 Debug\Error.obj
          Debug\FST.obj
@@ -29,7 +39,13 @@
      1>Сборка проекта "D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\SE_Lab18.vcxproj" завершена (целевые объекты Build).
 
 Сборка успешно завершена.
-    Предупреждений: 0
+
+       "D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\SE_Lab18.vcxproj" (целевой объект Build ) (1) ->
+       (Целевой объект ClCompile) -> 
+         D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
+         D:\BSTU\3 семестр\КПО\RIV-2024\SE_Lab18\SE_Lab18\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
+
+    Предупреждений: 2
     Ошибок: 0
 
-Прошло времени 00:00:00.35
+Прошло времени 00:00:01.39
