@@ -1,0 +1,22 @@
+main {
+
+let byte b1 = 3&5;
+let byte v2 = ~4;
+let int a;
+let int b = 5;
+
+a = 3;
+let int c = getSum(4, 5);
+print(c);
+
+let ch symbol = 'I';
+let str stroka = "dont mind";
+print("Вывод строки");
+
+if (a > 2)
+{
+print("OK");
+}
+
+return done;
+}
