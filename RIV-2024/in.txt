@@ -1,0 +1,5 @@
+main {
+
+let int a = 3;
+
+}

@@ -1,0 +1,4 @@
+   id       datatype    idtype      Line     Scope     value
+ main_1       INT         1         -         0
+    a_3       INT         V         3         main         0
+   L0_3      BYTE         L         3         -         3
