@@ -1,5 +1,47 @@
-main{
+.586P
+.model flat, stdcall
+includelib libucrt.lib
+includelib kernel32.lib
+includelib ../Debug/LIB.lib
+ExitProcess PROTO : DWORD
 
-let int a=3;
+SetConsoleCP PROTO : DWORD
 
-}
+SetConsoleOutputCP PROTO : DWORD
+
+Pow PROTO : BYTE, : BYTE 
+
+Sum PROTO : BYTE, : BYTE 
+
+writestr PROTO : DWORD 
+
+writeint PROTO : BYTE 
+
+writebool PROTO : BYTE 
+
+writechar PROTO : BYTE 
+
+.stack 4096
+
+.const
+L0 SBYTE  ; byte
+
+.data
+a SBYTE 0 ; byte
+
+.code
+main PROC
+Invoke SetConsoleCP, 1251
+Invoke SetConsoleOutputCP, 1251
+
+; string #3 : i=l
+mov al, L0
+mov a, al 
+
+movsx eax, a
+push eax
+CALL writeint
+push -1
+call ExitProcess
+main ENDP
+end main

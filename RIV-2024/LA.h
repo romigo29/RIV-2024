@@ -5,7 +5,7 @@
 #include"LA.h"
 #include"IT.h"
 #define MAX_LEX_SIZE 4096
-#define FST_AMOUNT 13
+#define FST_AMOUNT 14
 #define ID_SIZE 9
 
 #define SINGLE_QUOTE '\''
@@ -42,6 +42,16 @@
 	FST::NODE(1, FST::RELATION('t', 3)),\
 	FST::NODE()\
 );
+
+#define FST_BOOL FST::FST _bool(str,\
+	5,\
+	FST::NODE(1,FST::RELATION('b',1)),\
+	FST::NODE(1,FST::RELATION('o',2)),\
+	FST::NODE(1,FST::RELATION('o',3)),\
+	FST::NODE(1,FST::RELATION('l',4)),\
+	FST::NODE()\
+);
+
 #define FST_CH FST::FST _ch(str,\
 	3,\
 	FST::NODE(1, FST::RELATION('c', 1)),\
@@ -142,7 +152,7 @@
 );
 #define FST_IDENF FST::FST idenf(str,\
 	2,\
-	FST::NODE(118,\
+	FST::NODE(119,\
 		FST::RELATION('a', 1), FST::RELATION('a', 0), FST::RELATION('b', 1), FST::RELATION('b', 0),\
 		FST::RELATION('c', 1), FST::RELATION('c', 0), FST::RELATION('d', 1), FST::RELATION('d', 0), FST::RELATION('e', 1), FST::RELATION('e', 0),\
 		FST::RELATION('f', 1), FST::RELATION('f', 0), FST::RELATION('g', 1), FST::RELATION('g', 0), FST::RELATION('h', 0), FST::RELATION('h', 1), FST::RELATION('i', 0), FST::RELATION('i', 1),\
@@ -162,7 +172,7 @@
 		FST::RELATION('Y', 0), FST::RELATION('Y', 1), FST::RELATION('Z', 0), FST::RELATION('Z', 1), FST::RELATION('0', 1), FST::RELATION('1', 1),\
 		FST::RELATION('2', 1), FST::RELATION('3', 1), FST::RELATION('4', 1),\
 		FST::RELATION('5', 1), FST::RELATION('6', 1), FST::RELATION('7', 1),\
-		FST::RELATION('8', 1), FST::RELATION('9', 1)),\
+		FST::RELATION('8', 1), FST::RELATION('9', 1), FST::RELATION('_', 0)),\
 	FST::NODE()\
 );
 
@@ -172,8 +182,8 @@ namespace LA
 
 	struct LEX
 	{
-		IT::IdTable idTable;
-		LT::LexTable lexTable;
+		IT::idTable idTable;
+		LT::lexTable lexTable;
 	};
 
 	struct FstLexeme {

@@ -2,6 +2,7 @@
 #include "MFST.h"
 #include "PolishNotation.h"
 #include "SA.h"
+#include "CodeGeneration.h"
 
 int _tmain(int argc, _TCHAR* argv[]) {
 
@@ -34,34 +35,41 @@ int _tmain(int argc, _TCHAR* argv[]) {
         Out::WriteOut(in, parm.out);
         Log::WriteIn(log, in);
         Log::WriteForbidden(log, in);
-        Log::Close(log);
-        Out::CloseOut(out);
+    
 
-        LA::Lex LexTables = LA::LA(parm, in);
+        LA::LEX lexTables = LA::LA(parm, in);
 
         MFST_TRACE_START
-            MFST::Mfst mfst(LexTables.lexTable, GRB::getGreibach());
+            MFST::Mfst mfst(lexTables.lexTable, GRB::getGreibach());
 
         mfst.start();
         mfst.savededucation();
         mfst.printrules();
 
-        if (PN::startPolish(LexTables)) {
+        if (PN::startPolish(lexTables)) {
             cout << "\nПольская запись построена\n";
         }
         else {
             cout << "\nПольская запись не построена\n";
         }
 
-        LT::PrintLT(LexTables.lexTable);
+        LT::PrintLT(lexTables.lexTable);
 
-       if (SA::SA(LexTables, log)) {
+       if (SA::SA(lexTables, log)) {
             cout << "\nСемантический анализатор выполнил работу без ошибок\n";
         }
 
         else {
             cout << "\nВ работе семантического анализатора были ошибки\n";
         }
+
+       CodeGeneration::GenerateCode(lexTables, out);
+
+       cout << endl << "Программа выполнена успешно!" << endl;
+
+       Log::Close(log);
+       Out::CloseOut(out);
+
     }
     catch (Error::ERROR e)
     {

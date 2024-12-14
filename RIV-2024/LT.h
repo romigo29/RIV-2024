@@ -4,6 +4,7 @@
 #define LT_TI_NULLIDX 0XFFFFFFFF
 #define LEX_BYTE 't'
 #define LEX_INT 't'
+#define LEX_BOOL 't'
 #define LEX_CH 't'
 #define LEX_STRING 't'
 
@@ -19,7 +20,7 @@
 #define LEX_SEMICOLON ';'
 #define LEX_COMMA ','
 #define LEX_LEFTBRACE '{'
-#define LEX_BRACELET '}'
+#define LEX_RIGHTBRACE '}'
 #define LEX_LEFTTHESIS '('
 #define LEX_RIGHTTHESIS ')'
 #define LEX_OPERATION 'v'
@@ -37,15 +38,15 @@ namespace LT
 		int sn;
 		int idxTI;
 	};
-	struct LexTable
+	struct lexTable
 	{
 		int maxsize;
 		int size;
 		Entry* table;
 	};
-	LexTable Create(int size);
-	void Add(LexTable& lextable, Entry entry);
-	Entry GetEntry(LexTable& lextable, int n);
-	void Delete(LexTable& lextable);
-	void PrintLT(LexTable& lextable);
+	lexTable Create(int size);
+	void Add(lexTable& lexTable, Entry entry);
+	Entry GetEntry(lexTable& lexTable, int n);
+	void Delete(lexTable& lexTable);
+	void PrintLT(lexTable& lexTable);
 }

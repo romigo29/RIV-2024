@@ -4,8 +4,8 @@
 namespace SA {
 
     bool SA(LA::LEX& lex, Log::LOG log) {
-        LT::LexTable& lexTable = lex.lexTable;
-        IT::IdTable& idTable = lex.idTable;
+        LT::lexTable& lexTable = lex.lexTable;
+        IT::idTable& idTable = lex.idTable;
         bool isSemCorrect = true;
 
         for (int i = 0; i < lexTable.size; i++) {
@@ -22,7 +22,7 @@ namespace SA {
         return isSemCorrect;
     }
 
-    bool DivisionByZero(LT::LexTable& lexTable,IT::IdTable& idTable, int index) {
+    bool DivisionByZero(LT::lexTable& lexTable,IT::idTable& idTable, int index) {
 
         if (idTable.table[lexTable.table[index + 1].idxTI].value.vint == 0) {
             throw ERROR_THROW(129);

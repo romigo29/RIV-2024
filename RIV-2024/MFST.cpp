@@ -41,10 +41,10 @@ namespace MFST
 	};
 
 	Mfst::Mfst() { lenta = 0; lenta_size = lenta_position = 0; };
-	Mfst::Mfst(LT::LexTable& lextable, GRB::Greibach pgrebach)
+	Mfst::Mfst(LT::lexTable& lexTable, GRB::Greibach pgrebach)
 	{
 		grebach = pgrebach;
-		lex = lextable;
+		lex = lexTable;
 		lenta = new short[lenta_size = lex.size];
 		for (int k = 0; k < lex.size; k++)
 			lenta[k] = GRB::Rule::Chain::T(lex.table[k].lexema[0]);

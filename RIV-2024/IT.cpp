@@ -4,9 +4,9 @@
 
 namespace IT
 {
-	IdTable Create(int size)
+	idTable Create(int size)
 	{
-		IdTable* tabl = new IdTable;
+		idTable* tabl = new idTable;
 		if (size > TI_MAXSIZE)
 		{
 			throw ERROR_THROW(116);
@@ -17,44 +17,44 @@ namespace IT
 		return *tabl;
 	}
 
-	void Add(IdTable& idtable, Entry entry)
+	void Add(idTable& idTable, Entry entry)
 	{
 		bool ident = false;
-		if (idtable.size + 1 > idtable.maxsize)
+		if (idTable.size + 1 > idTable.maxsize)
 		{
 			throw ERROR_THROW(117);
 		}
 
-		memcpy(&idtable.table[idtable.size], &entry, sizeof(Entry));
-		idtable.size += 1;
+		memcpy(&idTable.table[idTable.size], &entry, sizeof(Entry));
+		idTable.size += 1;
 	}
-	Entry GetEntry(IdTable& idtable, int n)
+	Entry GetEntry(idTable& idTable, int n)
 	{
-		return idtable.table[n];
+		return idTable.table[n];
 	}
 
-	int search(IdTable& idtable, Entry& entry)
+	int search(idTable& idTable, Entry& entry)
 	{
-		for (int i = 0; i < idtable.size; i++)  
+		for (int i = 0; i < idTable.size; i++)  
 		{
-			if (strcmp(entry.id, idtable.table[i].id) == 0 && entry.scope == idtable.table[i].scope)
+			if (strcmp(entry.id, idTable.table[i].id) == 0 && entry.scope == idTable.table[i].scope)
 			{
 				return i;
 			}
-			else if (strcmp(entry.id, idtable.table[i].id) == 0 && idtable.table[i].idtype == IT::F)
+			else if (strcmp(entry.id, idTable.table[i].id) == 0 && idTable.table[i].idtype == IT::F)
 			{
 				return i;
 			}
 		}
 		return -1;
 	}
-	int IsId(IdTable& idtable, char id[ID_MAXSIZE])
+	int IsId(idTable& idTable, char id[ID_MAXSIZE])
 	{
 		// Проход по всем элементам таблицы идентификаторов
-		for (int i = 0; i < idtable.size; i++) {
+		for (int i = 0; i < idTable.size; i++) {
 			// Сравнение переданного идентификатора с текущим в таблице
-			if (strcmp(idtable.table[i].id, id) == 0) {
-				return idtable.table[i].idxfirstLE;  // Возврат номера строки, если идентификатор найден
+			if (strcmp(idTable.table[i].id, id) == 0) {
+				return idTable.table[i].idxfirstLE;  // Возврат номера строки, если идентификатор найден
 			}
 		}
 		return TI_NULLIDX;  // Возвращаем специальную константу, если идентификатор не найден

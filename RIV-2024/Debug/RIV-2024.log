@@ -1,156 +1,14 @@
-﻿Сборка начата 13.12.2024 09:45:54.
-Уровень детализации журнала: Normal.     1>Проект "D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\RIV-2024.vcxproj" в узле 2 (целевые объекты Build).
+﻿Сборка начата 14.12.2024 22:33:19.
+Уровень детализации журнала: Normal.     1>Проект "D:\BSTU\course\RIV-2024\RIV-2024\RIV-2024\RIV-2024.vcxproj" в узле 2 (целевые объекты Build).
      1>PrepareForBuild:
          Структурированный вывод включен. Форматирование диагностики компилятора будет отражать иерархию ошибок. Подробнее см. https://aka.ms/cpp/structured-output.
-         Создание каталога "D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\Debug\".
-         Создание каталога "Debug\RIV-2024.tlog\".
        InitializeBuildStatus:
-         Создание "Debug\RIV-2024.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
          Обращение к "Debug\RIV-2024.tlog\unsuccessfulbuild".
        ClCompile:
-         C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX86\x86\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W3 /Gd /TP /analyze- /FC /errorReport:prompt Error.cpp FST.cpp GRB.cpp In.cpp IT.cpp LA.cpp Log.cpp LT.cpp MFST.cpp Out.cpp Parm.cpp PolishNotation.cpp "RIV-2024.cpp" SA.cpp
-         Error.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Error.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Error.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         FST.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\FST.cpp(63,17): warning C4267: инициализация: преобразование из "size_t" в "short"; возможна потеря данных
-         GRB.cpp
-         In.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "In.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "In.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.cpp(29,45): warning C4018: <: несоответствие типов со знаком и без знака
-         IT.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "IT.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "IT.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         LA.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "LA.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "LA.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.cpp(661,35): warning C4018: <: несоответствие типов со знаком и без знака
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.cpp(677,35): warning C4018: <: несоответствие типов со знаком и без знака
-         Log.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Log.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Log.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         LT.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "LT.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "LT.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         MFST.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "MFST.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "MFST.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\MFST.cpp(261,36): warning C4267: =: преобразование из "size_t" в "short"; возможна потеря данных
-         Out.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Out.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Out.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         Parm.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Parm.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "Parm.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         PolishNotation.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "PolishNotation.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "PolishNotation.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         RIV-2024.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "RIV-2024.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "RIV-2024.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         SA.cpp
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "SA.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(6,9):
-             см. предыдущее определение "SINGLE_QUOTE"
-         
-     1>D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         (компиляция исходного файла "SA.cpp")
-             D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.h(5,9):
-             см. предыдущее определение "DOUBLE_QUOTE"
-         
-         Создание кода...
+         Для всех выходных данных обновления не требуется.
        Link:
-         C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX86\x86\link.exe /ERRORREPORT:PROMPT /OUT:"D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\Debug\RIV-2024.exe" /INCREMENTAL /ILK:"Debug\RIV-2024.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\Debug\RIV-2024.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\Debug\RIV-2024.lib" /MACHINE:X86 Debug\Error.obj
+         C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX86\x86\link.exe /ERRORREPORT:PROMPT /OUT:"D:\BSTU\course\RIV-2024\RIV-2024\Debug\RIV-2024.exe" /INCREMENTAL /ILK:"Debug\RIV-2024.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\BSTU\course\RIV-2024\RIV-2024\Debug\RIV-2024.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\BSTU\course\RIV-2024\RIV-2024\Debug\RIV-2024.lib" /MACHINE:X86 Debug\CodeGeneration.obj
+         Debug\Error.obj
          Debug\FST.obj
          Debug\GRB.obj
          Debug\In.obj
@@ -164,47 +22,14 @@
          Debug\PolishNotation.obj
          "Debug\RIV-2024.obj"
          Debug\SA.obj
-         RIV-2024.vcxproj -> D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\Debug\RIV-2024.exe
+         RIV-2024.vcxproj -> D:\BSTU\course\RIV-2024\RIV-2024\Debug\RIV-2024.exe
        FinalizeBuildStatus:
          Файл "Debug\RIV-2024.tlog\unsuccessfulbuild" удаляется.
          Обращение к "Debug\RIV-2024.tlog\RIV-2024.lastbuildstate".
-     1>Сборка проекта "D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\RIV-2024.vcxproj" завершена (целевые объекты Build).
+     1>Сборка проекта "D:\BSTU\course\RIV-2024\RIV-2024\RIV-2024\RIV-2024.vcxproj" завершена (целевые объекты Build).
 
 Сборка успешно завершена.
-
-       "D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\RIV-2024.vcxproj" (целевой объект Build ) (1) ->
-       (Целевой объект ClCompile) -> 
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\FST.cpp(63,17): warning C4267: инициализация: преобразование из "size_t" в "short"; возможна потеря данных
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\In.cpp(29,45): warning C4018: <: несоответствие типов со знаком и без знака
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.cpp(661,35): warning C4018: <: несоответствие типов со знаком и без знака
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.cpp(677,35): warning C4018: <: несоответствие типов со знаком и без знака
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\MFST.cpp(261,36): warning C4267: =: преобразование из "size_t" в "short"; возможна потеря данных
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(11,9): warning C4005: SINGLE_QUOTE: изменение макроопределения
-         D:\BSTU\3 семестр\КПО\!курсовой\RIV-2024\RIV-2024\RIV-2024\LA.h(12,9): warning C4005: DOUBLE_QUOTE: изменение макроопределения
-
-    Предупреждений: 29
+    Предупреждений: 0
     Ошибок: 0
 
-Прошло времени 00:00:10.51
+Прошло времени 00:00:00.56

@@ -1,5 +1,20 @@
+int function getMul(int num1, int num2) {
+    let int result = num1 + num2;
+    return result;
+};
+
 main {
 
-let int a = 3;
+let int b = 1;
+let int d = 4;
+let int my_c = getMul(b, d);
+print(my_c);
+
+let ch re = 't';
+print(re);
+
+if (d > 3) {
+   print("OK");
+}
 
 }

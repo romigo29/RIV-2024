@@ -76,6 +76,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CodeGeneration.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="FST.cpp" />
     <ClCompile Include="GRB.cpp" />
@@ -144,6 +148,7 @@
     <ClCompile Include="SA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CodeGeneration.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="FST.h" />
     <ClInclude Include="GRB.h" />

@@ -99,11 +99,11 @@ namespace MFST
 		short nrulechain;					//номер текущей цепочки,текущего правила
 		short lenta_size;					//размер ленты
 		GRB::Greibach grebach;				//грамматика √рейбах
-		LT::LexTable lex;					//результат работы лексического анализатора
+		LT::lexTable lex;					//результат работы лексического анализатора
 		MFSTSTSTACK st;						//стек автомата
 		MFSTSTSTATE storestate;		//стек дл€ хранени€ состо€ний
 		Mfst();
-		Mfst(LT::LexTable& plex, GRB::Greibach pgrebach);
+		Mfst(LT::lexTable& plex, GRB::Greibach pgrebach);
 		char* getCSt(char* buf);			//получить содержимое стека
 		char* getCLenta(char* buf, short pos, short n = 25);	//лента: n символов с pos
 		char* getDiagnosis(short n, char* buf);					//получить n-ю строку диагностики или 0х00
