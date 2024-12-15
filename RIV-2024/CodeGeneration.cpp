@@ -13,8 +13,8 @@ namespace CodeGeneration {
 		*out.stream << "ExitProcess PROTO : DWORD\n\n";
 		*out.stream << "SetConsoleCP PROTO : DWORD\n\n";
 		*out.stream << "SetConsoleOutputCP PROTO : DWORD\n\n";
-		*out.stream << "Pow PROTO : BYTE, : BYTE \n\n";
-		*out.stream << "Sum PROTO : BYTE, : BYTE \n\n";
+		*out.stream << "module PROTO : BYTE \n\n";
+		*out.stream << "rest PROTO : BYTE, : BYTE \n\n";
 		*out.stream << "writestr PROTO : DWORD \n\n";
 		*out.stream << "writeint PROTO : BYTE \n\n";
 		*out.stream << "writebool PROTO : BYTE \n\n";
@@ -44,6 +44,10 @@ namespace CodeGeneration {
 				case IT::BOOL: {
 					*out.stream << " BYTE " << lex.idTable.table[i].value.vbool << " ; boolean";
 				}
+				case IT::INT: {
+					*out.stream << " DWORD " << lex.idTable.table[i].value.vint << " ; integer (4 bytes)";
+					break;
+				}
 				}
 				*out.stream << "\n";
 			}
@@ -61,11 +65,9 @@ namespace CodeGeneration {
 					*out.stream << " SBYTE 0 ; byte";
 					break;
 				}
-
 				case IT::INT: {
 					*out.stream << " SDWORD 0 ; int";
 					break;
-
 				}
 				case IT::STR: {
 					*out.stream << " DWORD 0 ; str";
@@ -84,20 +86,6 @@ namespace CodeGeneration {
 			}
 		}
 		*out.stream << "\n";
-	}
-
-	bool compareVectorToCString(const std::vector<char>& vec, const char* cstr) {
-		if (vec.size() != std::strlen(cstr)) {
-			return false;
-		}
-
-		for (size_t i = 0; i < vec.size(); ++i) {
-			if (vec[i] != cstr[i]) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	void Expression(Out::OUT out, LA::LEX lex, int startPos, int endPos) {
@@ -162,51 +150,80 @@ namespace CodeGeneration {
 					}
 					break;
 				}
-				case DIRSLASH: { // Деление
-					*out.stream << "; Division\n";
+				
+				case AMPERSAND: { // Логическое И
+					*out.stream << "; Logical AND\n";
 
 					if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
-						*out.stream << "movsx ax, " << leftOperand->id << "\n"; // Расширение num1 -> ax
-						*out.stream << "movsx bx, " << rightOperand->id << "\n"; // Расширение num2 -> bx
-
-						// Деление без проверки на ноль
-						*out.stream << "idiv bl\n"; // Деление со знаком (8-бит)
-
-						if (result->iddatatype == IT::BYTE) {
-							*out.stream << "mov " << result->id << ", al\n"; // Сохраняем результат (младший байт)
-						}
-						else if (result->iddatatype == IT::INT) {
-							*out.stream << "mov " << result->id << ", eax\n"; // Сохраняем полный результат
-						}
+						*out.stream << "mov al, " << leftOperand->id << "\n";  // Загружаем первый операнд (BYTE)
+						*out.stream << "and al, " << rightOperand->id << "\n"; // Логическое И с правым операндом
+						*out.stream << "mov " << result->id << ", al\n";       // Сохраняем результат
 					}
 					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
-						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загрузка num1 в eax
-						*out.stream << "cdq\n";                              // Расширение знака в edx:eax
-						*out.stream << "mov ecx, " << rightOperand->id << "\n"; // Загрузка num2 в ecx
-
-						// Деление без проверки на ноль
-						*out.stream << "idiv ecx\n"; // Деление со знаком
-						*out.stream << "mov " << result->id << ", eax\n"; // Сохранение результата
+						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загружаем первый операнд (INT)
+						*out.stream << "and eax, " << rightOperand->id << "\n"; // Логическое И с правым операндом
+						*out.stream << "mov " << result->id << ", eax\n";      // Сохраняем результат
 					}
 					break;
 				}
+				case PIPE: { // Логическое ИЛИ
+					*out.stream << "; Logical OR\n";
+
+					if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
+						*out.stream << "mov al, " << leftOperand->id << "\n";  // Загружаем первый операнд (BYTE)
+						*out.stream << "or al, " << rightOperand->id << "\n";  // Логическое ИЛИ с правым операндом
+						*out.stream << "mov " << result->id << ", al\n";       // Сохраняем результат
+					}
+					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
+						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загружаем первый операнд (INT)
+						*out.stream << "or eax, " << rightOperand->id << "\n";  // Логическое ИЛИ с правым операндом
+						*out.stream << "mov " << result->id << ", eax\n";      // Сохраняем результат
+					}
+					break;
+				}
+
+
 				default:
 					*out.stream << "; Unsupported operation\n";
 					break;
 				}
 				break;
 			}
+			case TILDE: { // Логическая инверсия
+				*out.stream << "; Logical NOT\n";
+				IT::Entry* operand = &lex.idTable.table[lex.lexTable.table[i - 1].idxTI];
+				IT::Entry* result = &lex.idTable.table[lex.lexTable.table[i - 3].idxTI];
+
+				if (operand->iddatatype == IT::BYTE) {
+					*out.stream << "mov al, " << operand->id << "\n";    // Загружаем операнд (BYTE)
+					*out.stream << "not al\n";                          // Выполняем логическую инверсию
+					*out.stream << "mov " << result->id << ", al\n";    // Сохраняем результат
+				}
+				else if (operand->iddatatype == IT::INT) {
+					*out.stream << "mov eax, " << operand->id << "\n";   // Загружаем операнд (INT)
+					*out.stream << "not eax\n";                         // Выполняем логическую инверсию
+					*out.stream << "mov " << result->id << ", eax\n";   // Сохраняем результат
+				}
+				break;
+			}
 
 			case LEX_EQUAL: {
+				/*добавть счетчик увеличиния до @*/
 				*out.stream << "\n" << "; string #" << lex.lexTable.table[i].sn << " : ";
+				int parmsAmount = 0;
 				for (int j = -1; lex.lexTable.table[i + j].lexema[0] != LEX_SEMICOLON; j++) {
 					*out.stream << lex.lexTable.table[i + j].lexema[0];
+					if (lex.lexTable.table[i + j].lexema[0] == '@') {
+						parmsAmount = lex.lexTable.table[i + j + 1].lexema[0] - '0';
+					}
 				}
+
 				*out.stream << "\n";
 				bool isArgs = false;
 				IT::Entry* func, * save = nullptr;
 				IT::Entry* recipent = &lex.idTable.table[lex.lexTable.table[i - 1].idxTI];
-				IT::Entry* sender = &lex.idTable.table[lex.lexTable.table[i + 3].idxTI];
+				IT::Entry* sender = &lex.idTable.table[lex.lexTable.table[i + parmsAmount + 1].idxTI];
+
 				if (sender->idtype != IT::F && sender->idtype != IT::SF) {
 					switch (recipent->iddatatype) {
 					case IT::BYTE:
@@ -287,11 +304,11 @@ namespace CodeGeneration {
 						*out.stream << "CALL F" << sender->id << "\n";
 					}
 					else {
-						if (strcmp(sender->id, "Pow") == 0) {
-							*out.stream << "CALL Pow" << "\n";
+						if (strcmp(sender->id, "rest") == 0) {
+							*out.stream << "CALL rest" << "\n";
 						}
-						if (strcmp(sender->id, "Sum") == 0) {
-							*out.stream << "CALL Sum" << "\n";
+						if (strcmp(sender->id, "modul") == 0) {
+							*out.stream << "CALL module" << "\n";
 						}
 					}
 					if (sender->iddatatype == IT::BYTE || sender->iddatatype == IT::BOOL || sender->iddatatype == IT::CH) {
@@ -399,8 +416,6 @@ namespace CodeGeneration {
 				*out.stream << "If_End" << currentIf + 1 << ":\n";
 				break;
 			}
-
-
 			case LEX_RETURN: {
 				*out.stream << "\n; return\n";
 				IT::Entry* returnValue = &lex.idTable.table[lex.lexTable.table[i + 1].idxTI];
@@ -518,55 +533,70 @@ namespace CodeGeneration {
 					*out.stream << "CALL F" << function->id << "\n";
 				}
 				break;
-				}
+			}
 			}
 		}
 	}
 
 	void Functions(Out::OUT out, LA::LEX lex) {
 		for (int i = 0; i < lex.idTable.size; i++) {
-			if (lex.idTable.table[i].idtype == IT::F && lex.idTable.table[i].id != "main") {
-				*out.stream << "\nF" << lex.idTable.table[i].id << " PROC uses ebx ecx edi esi";
-				int cur = 1;
-				while (lex.lexTable.table[lex.idTable.table[i].idxfirstLE + cur].lexema[0] != LEX_RIGHTTHESIS) {
-					if (lex.lexTable.table[lex.idTable.table[i].idxfirstLE + cur].lexema[0] == LEX_ID
-						&& lex.idTable.table[lex.lexTable.table[lex.idTable.table[i].idxfirstLE + cur].idxTI].idtype == IT::P) {
-						*out.stream << ", " << lex.idTable.table[lex.lexTable.table[lex.idTable.table[i].idxfirstLE + cur].idxTI].id;
-						switch (lex.idTable.table[lex.lexTable.table[lex.idTable.table[i].idxfirstLE + cur].idxTI].iddatatype)
-						{
-						case IT::BYTE: {
+			if (lex.idTable.table[i].idtype != IT::F) continue;
+
+			// Заголовок функции
+			*out.stream << "\nF" << lex.idTable.table[i].id << " PROC uses ebx ecx edi esi";
+
+			int cur = 1;
+			int firstLexIdx = lex.idTable.table[i].idxfirstLE;
+
+			// Обработка параметров функции
+			while (lex.lexTable.table[firstLexIdx + cur].lexema[0] != LEX_RIGHTTHESIS) {
+				auto& curLex = lex.lexTable.table[firstLexIdx + cur];
+
+				if (curLex.lexema[0] == LEX_ID) {
+					int idxTI = curLex.idxTI;
+					auto& curId = lex.idTable.table[idxTI];
+
+					if (curId.idtype == IT::P) {
+						*out.stream << ", " << curId.id;
+						switch (curId.iddatatype) {
+						case IT::BYTE:
 							*out.stream << " : SBYTE";
 							break;
-						}
-						case IT::STR: {
+						case IT::STR:
+							*out.stream << " : DWORD";
+							break;
+						case IT::CH:
+						case IT::BOOL:
+							*out.stream << " : BYTE";
+							break;
+						case IT::INT:
 							*out.stream << " : DWORD";
 							break;
 						}
-						case IT::CH:
-						case IT::BOOL: {
-							*out.stream << " : BYTE";
-							break;
-						}
-						}
 					}
-					cur++;
 				}
-				int startPos = lex.idTable.table[i].idxfirstLE + cur;
-				while (lex.lexTable.table[lex.idTable.table[i].idxfirstLE + cur].lexema[0] != LEX_RETURN) {
-					cur++;
-				}
-				cur += 4;
-
-				int endPos = lex.idTable.table[i].idxfirstLE + cur;
-				Expression(out, lex, startPos, endPos);
-				*out.stream << "ret\n";
-				*out.stream << "F" << lex.idTable.table[i].id << " ENDP\n\n";
+				cur++;
 			}
+
+			// Обработка тела функции
+			int startPos = firstLexIdx + cur;
+			while (lex.lexTable.table[firstLexIdx + cur].lexema[0] != LEX_RETURN) {
+				cur++;
+			}
+			int endPos = firstLexIdx + cur + 4; // Учитываем возврат
+
+			Expression(out, lex, startPos, endPos);
+
+			// Завершение процедуры
+			*out.stream << "ret\n";
+			*out.stream << "F" << lex.idTable.table[i].id << " ENDP\n\n";
 		}
 	}
 
+
 	void Code(Out::OUT out, LA::LEX lex) {
 		*out.stream << ".code\n";
+
 		Functions(out, lex);
 		*out.stream << "main PROC\n";
 		*out.stream << "Invoke SetConsoleCP, 1251\n";

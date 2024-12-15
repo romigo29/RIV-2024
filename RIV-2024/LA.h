@@ -1,11 +1,7 @@
 #pragma once
-#include<iostream>
-#include<stack>
 #include"stdafx.h"
-#include"LA.h"
-#include"IT.h"
 #define MAX_LEX_SIZE 4096
-#define FST_AMOUNT 14
+#define FST_AMOUNT 16
 #define ID_SIZE 9
 
 #define SINGLE_QUOTE '\''
@@ -95,16 +91,6 @@
 	FST::NODE()\
 );
 
-#define FST_WHILE FST::FST _while(str, \
-    6, \
-    FST::NODE(1, FST::RELATION('w', 1)), \
-    FST::NODE(1, FST::RELATION('h', 2)), \
-    FST::NODE(1, FST::RELATION('i', 3)), \
-    FST::NODE(1, FST::RELATION('l', 4)), \
-    FST::NODE(1, FST::RELATION('e', 5)), \
-    FST::NODE() \
-);
-
 #define FST_IF FST::FST _if(str, \
     3, \
     FST::NODE(1, FST::RELATION('i', 1)), \
@@ -120,6 +106,27 @@
     FST::NODE(1, FST::RELATION('e', 4)), \
 	FST::NODE() \
 );
+#define FST_REST FST::FST _rest(str, \
+	5, \
+	FST::NODE(1, FST::RELATION('r', 1)), \
+    FST::NODE(1, FST::RELATION('e', 2)), \
+	FST::NODE(1, FST::RELATION('s', 3)), \
+    FST::NODE(1, FST::RELATION('t', 4)), \
+	FST::NODE() \
+);
+
+#define FST_MODULE FST::FST _module(str,\
+	7,\
+	FST::NODE(1, FST::RELATION('m', 1)),\
+	FST::NODE(1, FST::RELATION('o', 2)),\
+	FST::NODE(1, FST::RELATION('d', 3)),\
+	FST::NODE(1, FST::RELATION('u', 4)),\
+	FST::NODE(1, FST::RELATION('l', 5)),\
+	FST::NODE(1, FST::RELATION('e', 6)),\
+	FST::NODE()\
+);
+
+
 
 #define FST_MAIN FST::FST _main(str,\
 	5,\

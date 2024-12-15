@@ -1,7 +1,6 @@
 #pragma once
 #include "GRB.h"
 #include "stdafx.h"
-#include<iomanip>
 
 //макросы для трассировки работы синтаксического анализатора 
 #define MFST_TRACE_START std::cout<< std::setw(4)<<std::left<<"Шаг"<<":"\

@@ -1,8 +1,5 @@
 #pragma once
 #include "stdafx.h"
-#include "In.h" 
-#include "Parm.h" 
-#include "Error.h"
 
 namespace Log     // Работа с протоколом
 {

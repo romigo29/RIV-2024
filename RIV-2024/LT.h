@@ -17,6 +17,8 @@
 #define LEX_MAIN 'm'
 #define LEX_IF 's'
 #define LEX_ELSE 'e'
+#define LEX_REST 'R'
+#define LEX_MODULE 'M'
 #define LEX_SEMICOLON ';'
 #define LEX_COMMA ','
 #define LEX_LEFTBRACE '{'

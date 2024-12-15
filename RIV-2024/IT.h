@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#define ID_MAXSIZE 6
+#define ID_MAXSIZE 10
 #define TI_MAXSIZE 4096
 #define TI_INT_DEFAULT 0x00000000
 #define TI_STR_DEFAULT 0x00
@@ -16,6 +16,7 @@ namespace IT
 	struct Entry		// строка таблицы идентификаторов
 	{
 		int			idxfirstLE;			// индекс первой строки в таблице лексем
+		int			line;				//текущая линия
 		char		id[ID_MAXSIZE];		// идентификатор (автоматически усекается до ID_MAXSIZE)
 		IDDATATYPE	iddatatype;			// тип данных
 		IDTYPE		idtype;				// тип идентификатора (переменная, функция, параметр, локальная переменная)

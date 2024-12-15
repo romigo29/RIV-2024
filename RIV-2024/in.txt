@@ -1,20 +1,9 @@
-int function getMul(int num1, int num2) {
-    let int result = num1 + num2;
-    return result;
-};
-
 main {
 
-let int b = 1;
-let int d = 4;
-let int my_c = getMul(b, d);
-print(my_c);
+let int r1 = rest(10, 3);
+print(r1);
 
-let ch re = 't';
-print(re);
-
-if (d > 3) {
-   print("OK");
-}
+let int m1 = module(-2);
+print(m1);
 
 }

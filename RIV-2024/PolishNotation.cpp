@@ -1,19 +1,18 @@
 #include "PolishNotation.h"
 
 map<char, int>Priorities = {
-	{'<',0},
-	{'>',0},
 	{'(',0},
 	{')',0},
-	{',',1},
 	{'~',1},
-	{'+',2},
-	{'-',2},
-	{'*',3},
-	{'/',3},
-	{'&',3},
-	{'|',3},
-	{'?',3}
+	{'*',2},
+	{'/',2},
+	{'+',3},
+	{'-',3},
+	{'>',4},
+	{'<',4},
+	{'&',6},
+	{'|',7},
+	{',',8},
 };
 
 
@@ -58,6 +57,7 @@ namespace PN {
 				}
 				continue;
 
+			case TILDE:
 			case LEFTTHESIS:
 				stack.push(lex.lexTable.table[i]);
 				continue;
@@ -89,13 +89,22 @@ namespace PN {
 				continue;
 
 			case LEX_OPERATION:
+
 				while (!stack.empty() && Priorities[lex.lexTable.table[i].lexema[0]] > Priorities[stack.top().lexema[0]]) { //!!!!!!!!!!!!!!
 					queue.push(stack.top());
 					stack.pop();
 				}
 				stack.push(lex.lexTable.table[i]);
 				continue;
+			
+
+			case LEX_REST:
+			case LEX_MODULE:
+				is_function = true;
+				idx = lex.lexTable.table[i].idxTI;
+				continue;
 			}
+
 		}
 
 		while (!stack.empty()) {

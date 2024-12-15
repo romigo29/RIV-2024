@@ -14,21 +14,21 @@ namespace GRB
 			3,
 			Rule::Chain(4, TS('m'), TS('{'), NS('N'), TS('}')),                        // Основной случай
 			Rule::Chain(6, TS('m'), TS('{'), NS('N'), TS('}'), TS(';'), NS('S')),      // Часто встречающаяся структура
-			Rule::Chain(11, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('}'), TS(';'), NS('S')) // Сложная структура
+			Rule::Chain(10, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('}'), NS('S')) // Сложная структура
 		),
 		Rule(NS('N'), GRB_ERROR_SERIES + 1,
 			16,
 			Rule::Chain(4, TS('d'), TS('t'), TS('i'), TS(';')),
-			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),                         // Объявление переменной
+			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),
+			Rule::Chain(3, TS('d'), TS('t'), NS('N')),
 			Rule::Chain(7, TS('d'), TS('t'), TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
+			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(4, TS('i'), TS('v'), TS('i'), NS('N')),
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),                                  // Возврат
-			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),                         // Присваивание
-			Rule::Chain(4, TS('i'), TS('v'), TS('i'), NS('N')),
 			Rule::Chain(3, TS('p'), NS('E'), TS(';')),                                  // Печать
 			Rule::Chain(8, TS('d'), TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS(';')), // Объявление функции
-			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),                // Объявление с продолжением                        // Возврат с продолжением
-			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),                // Присваивание с продолжением
 			Rule::Chain(4, TS('p'), NS('E'), TS(';'), NS('N')),                         // Печать с продолжением
 			Rule::Chain(7, TS('s'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}')), // Условие
 			Rule::Chain(8, TS('s'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}'), NS('N')), // Условие с продолжением
@@ -36,20 +36,22 @@ namespace GRB
 			Rule::Chain(13, TS('s'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}'), NS('N'), TS('e'), TS('{'), NS('N'), TS('}'), NS('N')) // Сложное условие
 		),
 		Rule(NS('E'), GRB_ERROR_SERIES + 2,
-			13,
+			15,
 			Rule::Chain(1, TS('i')),                                                   // Переменная
 			Rule::Chain(1, TS('l')),                                                   // Литерал
+			Rule::Chain(2, TS('i'), NS('M')),                                          // Операция с переменной
+			Rule::Chain(2, TS('l'), NS('M')),                                          // Операция с литералом
 			Rule::Chain(3, TS('('), NS('E'), TS(')')),                                 // Выражение в скобках
 			Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),                        // Вызов функции
 			Rule::Chain(3, TS('i'), TS('('), TS(')')),                                 // Вызов функции без параметров
-			Rule::Chain(2, TS('i'), NS('M')),                                          // Операция с переменной
-			Rule::Chain(2, TS('l'), NS('M')),                                          // Операция с литералом
 			Rule::Chain(4, TS('('), NS('E'), TS(')'), NS('M')),                        // Операция с выражением
 			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('M')),               // Вызов функции с операцией
 			Rule::Chain(3, TS('i'), TS('v'), TS('i')),
 			Rule::Chain(2, TS('~'), NS('E')),                                          // Логическое отрицание
 			Rule::Chain(4, NS('E'), TS('v'), NS('E')),                                 // Логическая операция
-			Rule::Chain(5, TS('('), NS('E'), TS(')'), TS('v'), NS('E'))                // Операция между выражениями
+			Rule::Chain(5, TS('('), NS('E'), TS(')'), TS('v'), NS('E')),            // Операция между выражениями
+			Rule::Chain(4, TS('R'), TS('('), NS('W'), TS(')')),
+			Rule::Chain(4, TS('M'), TS('('), NS('W'), TS(')'))
 		),
 		Rule(NS('W'), GRB_ERROR_SERIES + 3,			//Подвыражение
 			4,		//W	→i|l|i,W|l,W

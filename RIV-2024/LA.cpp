@@ -41,6 +41,8 @@ namespace LA
             FST_PRINT
             FST_IF
             FST_ELSE
+            FST_REST
+            FST_MODULE
             FST_LITERAL
             FST_IDENF
 
@@ -57,6 +59,8 @@ namespace LA
             {_print, LEX_PRINT, nullptr},
             {_if, LEX_IF, nullptr},
             {_else, LEX_ELSE, nullptr},
+            {_rest, LEX_REST, nullptr},
+            {_module, LEX_MODULE, nullptr},
             {literal_int, LEX_LITERAL, nullptr},
             {idenf, LEX_ID, nullptr}
             
@@ -118,7 +122,8 @@ namespace LA
                     current_entry_IT.iddatatype = IT::INT;
                     current_entry_IT.idtype = IT::M;
                     current_entry_IT.value.vint = NULL;
-                    current_entry_IT.idxfirstLE = currentLine;
+                    current_entry_IT.line = currentLine;
+                    current_entry_IT.idxfirstLE = lexTable.size;
                     current_entry_IT.scope = NULL;
                     indexIT = IT::search(idTable, current_entry_IT);
                     if (indexIT >= 0)
@@ -187,7 +192,8 @@ namespace LA
                             falseFlag = false;
                         }
 
-                        current_entry_IT.idxfirstLE = currentLine;
+                        current_entry_IT.line = currentLine;
+                        current_entry_IT.idxfirstLE = lexTable.size;
                         current_entry_IT.scope = NULL;
                         current_entry_LT.idxTI = idTable.size;
                         IT::Add(idTable, current_entry_IT);
@@ -201,13 +207,13 @@ namespace LA
                     else
                         current_entry_IT.scope = scope.top(); // Установка области видимости как вершину стека
 
-
                     current_entry_LT.idxTI = idTable.size; // Установка индекса для лексемы
                     memcpy(current_entry_IT.id, str, ID_SIZE); // Копирование идентификатора в таблицу идентификаторов
                     current_entry_IT.id[ID_SIZE] = '\0'; // Завершение строки идентификатора
                     current_entry_IT.iddatatype = IT::INT; // Установка типа данных идентификатора
                     current_entry_IT.value.vint = 0; // Значение инициализировано как 0
-                    current_entry_IT.idxfirstLE = currentLine;
+                    current_entry_IT.line = currentLine;
+                    current_entry_IT.idxfirstLE = lexTable.size;
                     current_entry_IT.idtype = IT::V; // Установка типа идентификатора как переменной
 
                     // Обработка случая, если предыдущая лексема - это объявление
@@ -432,6 +438,26 @@ namespace LA
                 case LEX_DECLARE:
                     letFlag = true;
                     break;
+
+                case LEX_REST:
+                case LEX_MODULE:
+                    current_entry_LT.idxTI = idTable.size;
+                    memcpy(current_entry_IT.id, str, 5);
+                    current_entry_IT.id[5] = '\0';
+                    current_entry_IT.iddatatype = IT::BYTE;
+                    current_entry_IT.idtype = IT::SF;
+                    current_entry_IT.value.vint = NULL;
+                    current_entry_IT.line = currentLine;
+                    current_entry_IT.idxfirstLE = lexTable.size;
+                    if (!scope.empty())
+                        current_entry_IT.scope = scope.top();
+                    else
+                        current_entry_IT.scope = NULL;
+
+                    current_entry_LT.idxTI = idTable.size;
+                    IT::Add(idTable, current_entry_IT);
+  
+                    break;
                 }
 
                 bufferIndex = 0;
@@ -472,7 +498,8 @@ namespace LA
                     current_entry_LT.lexema[0] = LEX_LITERAL;
                     sprintf_s(current_entry_IT.id, "C%d", number_literal); // ID литерала
                     current_entry_IT.idtype = IT::L;
-                    current_entry_IT.idxfirstLE = currentLine;
+                    current_entry_IT.line = currentLine;
+                    current_entry_IT.idxfirstLE = lexTable.size;
 
                     current_entry_LT.sn = currentLine;
                     if (!scope.empty())
@@ -510,7 +537,8 @@ namespace LA
                     current_entry_LT.lexema[0] = LEX_LITERAL;
                     sprintf_s(current_entry_IT.id, "L%d", number_literal);
                     current_entry_IT.idtype = IT::L;
-                    current_entry_IT.idxfirstLE = currentLine;
+                    current_entry_IT.line = currentLine;
+                    current_entry_IT.idxfirstLE = lexTable.size;
                     
                     current_entry_LT.sn = currentLine;
                     if (!scope.empty())
@@ -595,7 +623,7 @@ namespace LA
                     declareFunctionflag = false;
                 }
                 break;
-            
+ 
             case COMMA:
             case EQUAL:
             case TILDE:
@@ -696,7 +724,7 @@ namespace LA
 
         for (int i = 0; i < idTable.size; i++) {
             IT::Entry temp_entry = IT::GetEntry(idTable, i);
-            IT_file << std::setw(5) << temp_entry.id << "_" << temp_entry.idxfirstLE;
+            IT_file << std::setw(5) << temp_entry.id << "_" << temp_entry.line;
             if (temp_entry.iddatatype == 1)  IT_file << std::setw(10) << "INT";
             if (temp_entry.iddatatype == 2)  IT_file << std::setw(10) << "STR";
             if (temp_entry.iddatatype == 3)  IT_file << std::setw(10) << "BYTE";
@@ -707,8 +735,10 @@ namespace LA
             if (temp_entry.idtype == IT::L)  IT_file << std::setw(10) << "L";
             if (temp_entry.idtype == IT::F)  IT_file << std::setw(10) << "F";
             if (temp_entry.idtype == IT::P)  IT_file << std::setw(10) << "P";
+            if (temp_entry.idtype == IT::SF)  IT_file << std::setw(10) << "SF";
+            if (temp_entry.idtype == IT::M)  IT_file << std::setw(10) << "M";
 
-            IT_file << std::setw(10) << temp_entry.idxfirstLE;
+            IT_file << std::setw(10) << temp_entry.line;
 
             IT_file << std::setw(10);
 

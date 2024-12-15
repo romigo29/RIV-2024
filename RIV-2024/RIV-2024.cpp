@@ -39,7 +39,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
         LA::LEX lexTables = LA::LA(parm, in);
 
-        MFST_TRACE_START
+       MFST_TRACE_START
             MFST::Mfst mfst(lexTables.lexTable, GRB::getGreibach());
 
         mfst.start();
@@ -55,17 +55,20 @@ int _tmain(int argc, _TCHAR* argv[]) {
 
         LT::PrintLT(lexTables.lexTable);
 
-       if (SA::SA(lexTables, log)) {
+      /* if (SA::SA(lexTables, log)) {
             cout << "\nСемантический анализатор выполнил работу без ошибок\n";
         }
 
         else {
             cout << "\nВ работе семантического анализатора были ошибки\n";
-        }
+        }*/
 
        CodeGeneration::GenerateCode(lexTables, out);
 
        cout << endl << "Программа выполнена успешно!" << endl;
+
+       /*LT::Delete(lexTables.lexTable);
+       IT::Delete(lexTables.idTable);*/
 
        Log::Close(log);
        Out::CloseOut(out);
@@ -82,6 +85,7 @@ int _tmain(int argc, _TCHAR* argv[]) {
     }
 
     In::deleteIn(in);
+ 
     system("pause");
     return 0;
 }
