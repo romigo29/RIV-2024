@@ -181,8 +181,6 @@ namespace CodeGeneration {
 					}
 					break;
 				}
-
-
 				default:
 					*out.stream << "; Unsupported operation\n";
 					break;
@@ -208,7 +206,6 @@ namespace CodeGeneration {
 			}
 
 			case LEX_EQUAL: {
-				/*добавть счетчик увеличиния до @*/
 				*out.stream << "\n" << "; string #" << lex.lexTable.table[i].sn << " : ";
 				int parmsAmount = 0;
 				for (int j = -1; lex.lexTable.table[i + j].lexema[0] != LEX_SEMICOLON; j++) {
@@ -307,7 +304,7 @@ namespace CodeGeneration {
 						if (strcmp(sender->id, "rest") == 0) {
 							*out.stream << "CALL rest" << "\n";
 						}
-						if (strcmp(sender->id, "modul") == 0) {
+						if (strcmp(sender->id, "module") == 0) {
 							*out.stream << "CALL module" << "\n";
 						}
 					}
@@ -354,15 +351,20 @@ namespace CodeGeneration {
 						}
 						break;
 					}
+					case LEX_LESS:
 					case LEX_GREATER: {
-						std::string data = lex.lexTable.table[i + cur].lexema;
+						char data = lex.lexTable.table[i + cur].lexema[0]; 
 
-						if (data == "==") op = "je";
-						else if (data == "!=") op = "jne";
-						else if (data == "<=") op = "jle";
-						else if (data == ">=") op = "jge";
-						else if (data == ">") op = "jg";
-						else if (data == "<") op = "jl";
+						if (data == '=') op = "je";
+						else if (data == '!') op = "jne";
+						else if (data == '<') {
+							if (lex.lexTable.table[i + cur].lexema[1] == '=') op = "jle"; 
+							else op = "jl"; 
+						}
+						else if (data == '>') {
+							if (lex.lexTable.table[i + cur].lexema[1] == '=') op = "jge";
+							else op = "jg"; 
+						}
 
 						break;
 					}
