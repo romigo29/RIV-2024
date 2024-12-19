@@ -92,92 +92,133 @@ namespace CodeGeneration {
 		for (int i = startPos; i < endPos; i++) {
 			switch (lex.lexTable.table[i].lexema[0]) {
 			case LEX_OPERATION: {
+
+				int operandsAmount = 1;
+				int j = 0;
+				while (lex.lexTable.table[i - operandsAmount - 1].lexema[0] == LEX_ID || lex.lexTable.table[i - operandsAmount - 1].lexema[0] == LEX_LITERAL) {
+					operandsAmount++;
+				}
+
 				char operation = lex.lexTable.table[i].lexema[1];
-				IT::Entry* leftOperand = &lex.idTable.table[lex.lexTable.table[i - 2].idxTI];
-				IT::Entry* rightOperand = &lex.idTable.table[lex.lexTable.table[i - 1].idxTI];
-				IT::Entry* result = &lex.idTable.table[lex.lexTable.table[i - 4].idxTI];
+
+				IT::Entry* leftOperand = nullptr;
+				IT::Entry* rightOperand = nullptr;
+				IT::Entry* result = nullptr;
+
+				if (operandsAmount == 1) {
+					leftOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount].idxTI];
+					rightOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount + 1].idxTI];
+					result = &lex.idTable.table[lex.lexTable.table[i - operandsAmount - 2].idxTI];
+				}
+				else if (operandsAmount > 1) {
+					leftOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount].idxTI];
+					rightOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount - 2].idxTI];
+					result = &lex.idTable.table[lex.lexTable.table[i - operandsAmount - 4].idxTI];
+				}
 
 				switch (operation) {
-				case PLUS: { // Сложение
+				case PLUS: { 
 					*out.stream << "; Addition\n";
 
-					if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
-						*out.stream << "mov al, " << leftOperand->id << "\n";  // Загружаем первый операнд (BYTE)
-						*out.stream << "add al, " << rightOperand->id << "\n"; // Складываем с правым операндом
-						*out.stream << "mov " << result->id << ", al\n";       // Сохраняем результат
+					if (operandsAmount > 1) {
+						if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
+							*out.stream << "mov al, " << leftOperand->id << "\n";
+							*out.stream << "add al, " << rightOperand->id << "\n";
+							*out.stream << "mov " << result->id << ", al\n";
+						}
+						else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
+							*out.stream << "mov eax, " << leftOperand->id << "\n";
+							*out.stream << "add eax, " << rightOperand->id << "\n";
+							*out.stream << "mov " << result->id << ", eax\n";
+						}
 					}
-					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
-						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загружаем первый операнд (INT)
-						*out.stream << "add eax, " << rightOperand->id << "\n"; // Складываем с правым операндом
-						*out.stream << "mov " << result->id << ", eax\n";      // Сохраняем результат
+
+					if (operandsAmount == 1) {
+
+						j = operandsAmount;
+						while (lex.lexTable.table[i - j - 1].lexema[0] != LEX_EQUAL) {
+							j++;
+						}
+
+						if (leftOperand->iddatatype == IT::BYTE) {
+							*out.stream << "add al, " << leftOperand->id << "\n";
+
+							result = &lex.idTable.table[lex.lexTable.table[i - j - 2].idxTI];
+							*out.stream << "mov " << result->id << ", al\n";
+						}
+						else if (leftOperand->iddatatype == IT::INT) {
+							*out.stream << "add eax, " << leftOperand->id << "\n";
+							*out.stream << "mov " << result->id << ", eax\n";
+						}
 					}
 					break;
 				}
-				case MINUS: { // Вычитание
+				case MINUS: { 
 					*out.stream << "; Subtraction\n";
 
 					if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
-						*out.stream << "mov al, " << leftOperand->id << "\n";  // Загружаем первый операнд (BYTE)
-						*out.stream << "sub al, " << rightOperand->id << "\n"; // Вычитаем правый операнд
-						*out.stream << "mov " << result->id << ", al\n";       // Сохраняем результат
+						*out.stream << "mov al, " << leftOperand->id << "\n";  
+						*out.stream << "sub al, " << rightOperand->id << "\n"; 
+						*out.stream << "mov " << result->id << ", al\n";       
 					}
 					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
-						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загружаем первый операнд (INT)
-						*out.stream << "sub eax, " << rightOperand->id << "\n"; // Вычитаем правый операнд
-						*out.stream << "mov " << result->id << ", eax\n";      // Сохраняем результат
+						*out.stream << "mov eax, " << leftOperand->id << "\n"; 
+						*out.stream << "sub eax, " << rightOperand->id << "\n"; 
+						*out.stream << "mov " << result->id << ", eax\n";   
 					}
+
 					break;
 				}
-				case STAR: { // Умножение
+				case STAR: { 
 					*out.stream << "; Multiplication\n";
 
 					if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
-						*out.stream << "movsx ax, " << leftOperand->id << "\n"; // Расширение num1 -> ax
-						*out.stream << "movsx bx, " << rightOperand->id << "\n"; // Расширение num2 -> bx
-						*out.stream << "imul ax, bx\n";                         // Умножение со знаком в 16 битах
+						*out.stream << "movsx ax, " << leftOperand->id << "\n"; 
+						*out.stream << "movsx bx, " << rightOperand->id << "\n"; 
+						*out.stream << "imul eax, ebx\n";                         
 
 						if (result->iddatatype == IT::BYTE) {
-							*out.stream << "mov " << result->id << ", al\n"; // Сохраняем младший байт результата
+							*out.stream << "mov " << result->id << ", al\n";
 						}
 						else if (result->iddatatype == IT::INT) {
-							*out.stream << "mov " << result->id << ", eax\n"; // Сохраняем полный результат
+							*out.stream << "mov " << result->id << ", eax\n";
 						}
 					}
 					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
-						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загрузка num1 в eax
-						*out.stream << "imul eax, " << rightOperand->id << "\n"; // Умножение int
-						*out.stream << "mov " << result->id << ", eax\n"; // Сохранение результата
+						*out.stream << "mov eax, " << leftOperand->id << "\n"; 
+						*out.stream << "imul eax, " << rightOperand->id << "\n"; 
+						*out.stream << "mov " << result->id << ", eax\n";
 					}
 					break;
 				}
 				
-				case AMPERSAND: { // Логическое И
+				case AMPERSAND: {
 					*out.stream << "; Logical AND\n";
 
 					if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
-						*out.stream << "mov al, " << leftOperand->id << "\n";  // Загружаем первый операнд (BYTE)
-						*out.stream << "and al, " << rightOperand->id << "\n"; // Логическое И с правым операндом
-						*out.stream << "mov " << result->id << ", al\n";       // Сохраняем результат
+						*out.stream << "mov al, " << leftOperand->id << "\n";  
+						*out.stream << "and al, " << rightOperand->id << "\n"; 
+						*out.stream << "mov " << result->id << ", al\n";      
 					}
 					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
-						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загружаем первый операнд (INT)
-						*out.stream << "and eax, " << rightOperand->id << "\n"; // Логическое И с правым операндом
-						*out.stream << "mov " << result->id << ", eax\n";      // Сохраняем результат
+						*out.stream << "mov eax, " << leftOperand->id << "\n"; 
+						*out.stream << "and eax, " << rightOperand->id << "\n"; 
+						*out.stream << "mov " << result->id << ", eax\n";    
 					}
 					break;
 				}
-				case PIPE: { // Логическое ИЛИ
+				case PIPE: { 
 					*out.stream << "; Logical OR\n";
 
 					if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
-						*out.stream << "mov al, " << leftOperand->id << "\n";  // Загружаем первый операнд (BYTE)
-						*out.stream << "or al, " << rightOperand->id << "\n";  // Логическое ИЛИ с правым операндом
-						*out.stream << "mov " << result->id << ", al\n";       // Сохраняем результат
+						*out.stream << "mov al, " << leftOperand->id << "\n";  
+						*out.stream << "or al, " << rightOperand->id << "\n";  
+						*out.stream << "mov " << result->id << ", al\n";      
 					}
 					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
-						*out.stream << "mov eax, " << leftOperand->id << "\n"; // Загружаем первый операнд (INT)
-						*out.stream << "or eax, " << rightOperand->id << "\n";  // Логическое ИЛИ с правым операндом
-						*out.stream << "mov " << result->id << ", eax\n";      // Сохраняем результат
+						*out.stream << "mov eax, " << leftOperand->id << "\n";
+						*out.stream << "or eax, " << rightOperand->id << "\n";  
+						*out.stream << "mov " << result->id << ", eax\n";     
 					}
 					break;
 				}
@@ -187,20 +228,20 @@ namespace CodeGeneration {
 				}
 				break;
 			}
-			case TILDE: { // Логическая инверсия
+			case TILDE: { 
 				*out.stream << "; Logical NOT\n";
 				IT::Entry* operand = &lex.idTable.table[lex.lexTable.table[i - 1].idxTI];
 				IT::Entry* result = &lex.idTable.table[lex.lexTable.table[i - 3].idxTI];
 
 				if (operand->iddatatype == IT::BYTE) {
-					*out.stream << "mov al, " << operand->id << "\n";    // Загружаем операнд (BYTE)
-					*out.stream << "not al\n";                          // Выполняем логическую инверсию
-					*out.stream << "mov " << result->id << ", al\n";    // Сохраняем результат
+					*out.stream << "mov al, " << operand->id << "\n";    
+					*out.stream << "not al\n";                       
+					*out.stream << "mov " << result->id << ", al\n";  
 				}
 				else if (operand->iddatatype == IT::INT) {
-					*out.stream << "mov eax, " << operand->id << "\n";   // Загружаем операнд (INT)
-					*out.stream << "not eax\n";                         // Выполняем логическую инверсию
-					*out.stream << "mov " << result->id << ", eax\n";   // Сохраняем результат
+					*out.stream << "mov eax, " << operand->id << "\n";   
+					*out.stream << "not eax\n";                         
+					*out.stream << "mov " << result->id << ", eax\n";   
 				}
 				break;
 			}
@@ -235,16 +276,16 @@ namespace CodeGeneration {
 					case IT::INT: {
 
 						if (sender->iddatatype == IT::BYTE) {
-							*out.stream << "movzx eax, " << sender->id << "\n"; // Расширение BYTE до INT (незнаковое)
+							*out.stream << "movzx eax, " << sender->id << "\n"; 
 						}
 						else {
-							*out.stream << "mov eax, " << sender->id << "\n"; // Обычное присваивание
+							*out.stream << "mov eax, " << sender->id << "\n"; 
 						}
 						*out.stream << "mov " << recipent->id << ", eax\n";
 						break;
 					}
 
-					case IT::STR: { // для текста разное присваение
+					case IT::STR: { 
 						if (sender->idtype == IT::L) {
 							*out.stream << "push offset " << sender->id << '\n';
 							*out.stream << "pop eax\n";
@@ -321,6 +362,7 @@ namespace CodeGeneration {
 				int cur = 1;
 				int startPos;
 				bool isEnd = false;
+				bool hasElse = false;
 				IT::Entry* first = nullptr, * second = nullptr;
 				std::string op = "";
 				int currentIf = ifs;
@@ -351,19 +393,14 @@ namespace CodeGeneration {
 						}
 						break;
 					}
-					case LEX_LESS:
-					case LEX_GREATER: {
-						char data = lex.lexTable.table[i + cur].lexema[0]; 
+					case LEX_COMPARISON:  {
+						char data = lex.lexTable.table[i + cur].lexema[1]; 
 
-						if (data == '=') op = "je";
-						else if (data == '!') op = "jne";
-						else if (data == '<') {
-							if (lex.lexTable.table[i + cur].lexema[1] == '=') op = "jle"; 
-							else op = "jl"; 
+						if (data == '<') {
+							op = "jl"; 
 						}
 						else if (data == '>') {
-							if (lex.lexTable.table[i + cur].lexema[1] == '=') op = "jge";
-							else op = "jg"; 
+							op = "jg"; 
 						}
 
 						break;
@@ -398,26 +435,63 @@ namespace CodeGeneration {
 						}
 						*out.stream << "cmp eax, ebx\n";
 						*out.stream << op.c_str() << " If_End" << currentIf << "\n";
-						*out.stream << "jmp If_End" << ifs << "\n";
 						break;
 					}
 					case LEX_RIGHTBRACE: {
 						isEnd = true;
+
+						if (lex.lexTable.table[i + cur + 1].lexema[0] == LEX_ELSE) {
+							hasElse = true;
+						}
+
 						break;
 					}
 					}
 					if (isEnd) {
+
+						if (hasElse) {
+							*out.stream << "jmp If_Else" << endl;
+						}
+						else {
+							*out.stream << "jmp If_End" << currentIf + 1 << endl;
+						}
+
 						*out.stream << "If_End" << currentIf << ":\n";
+
+						
+
 						ifs += 2;
 						Expression(out, lex, startPos, i + cur);
 						i = i + cur;
+
+						if (hasElse) {
+							*out.stream << "jmp If_End" << currentIf + 1 << endl;
+						}
+
 						break;
 					}
 					cur++;
 				}
-				*out.stream << "If_End" << currentIf + 1 << ":\n";
 				break;
 			}
+
+			case LEX_ELSE: { 
+				int cur = 1;
+				if (lex.lexTable.table[i + cur].lexema[0] == LEX_LEFTBRACE) {
+					*out.stream << "If_Else:\n"; 
+					cur++; 
+					while (lex.lexTable.table[i + cur].lexema[0] != LEX_RIGHTBRACE) { 
+						Expression(out, lex, i + cur, i + cur + 1); 
+						cur++;
+					}
+
+				}
+				i += cur;
+				*out.stream << "If_End2" << ":\n";
+
+				break;
+			}
+
 			case LEX_RETURN: {
 				*out.stream << "\n; return\n";
 				IT::Entry* returnValue = &lex.idTable.table[lex.lexTable.table[i + 1].idxTI];
@@ -425,29 +499,29 @@ namespace CodeGeneration {
 				if (returnValue->iddatatype == IT::BYTE) {
 					// Если тип BYTE
 					if (returnValue->idtype == IT::L) {
-						*out.stream << "movsx eax, " << returnValue->id << "\n"; // Знаковое расширение BYTE в EAX
+						*out.stream << "movsx eax, " << returnValue->id << "\n"; 
 					}
 					else {
 						*out.stream << "movsx eax, " << returnValue->id << "\n";
-						*out.stream << "mov " << returnValue->id << ", al\n"; // Сохраняем в младший байт AL
+						*out.stream << "mov " << returnValue->id << ", al\n"; 
 					}
 				}
 				else if (returnValue->iddatatype == IT::INT) {
 					// Если тип INT
-					*out.stream << "mov eax, " << returnValue->id << "\n"; // Просто загружаем значение в EAX
+					*out.stream << "mov eax, " << returnValue->id << "\n";
 				}
 				else if (returnValue->iddatatype == IT::STR) {
 					// Если тип STR
 					if (returnValue->idtype == IT::L) {
-						*out.stream << "mov eax, OFFSET " << returnValue->id << "\n"; // Указатель на строку
+						*out.stream << "mov eax, OFFSET " << returnValue->id << "\n"; 
 					}
 					else {
-						*out.stream << "mov eax, " << returnValue->id << "\n"; // Сохраняем адрес строки
+						*out.stream << "mov eax, " << returnValue->id << "\n"; 
 					}
 				}
 				else {
-					// Для остальных типов: предполагаем unsigned
-					*out.stream << "movzx eax, " << returnValue->id << "\n"; // Беззнаковое расширение
+				
+					*out.stream << "movzx eax, " << returnValue->id << "\n";
 				}
 				break;
 			}
@@ -473,7 +547,7 @@ namespace CodeGeneration {
 					break;
 				}
 				case (IT::INT): {
-					*out.stream << "\nmov eax, " << lex.idTable.table[lex.lexTable.table[i + 2].idxTI].id << "\n"; // Прямое перемещение
+					*out.stream << "\nmov eax, " << lex.idTable.table[lex.lexTable.table[i + 2].idxTI].id << "\n"; 
 					*out.stream << "push eax\n";
 					*out.stream << "CALL writeint" << '\n';
 					break;
@@ -544,13 +618,11 @@ namespace CodeGeneration {
 		for (int i = 0; i < lex.idTable.size; i++) {
 			if (lex.idTable.table[i].idtype != IT::F) continue;
 
-			// Заголовок функции
 			*out.stream << "\nF" << lex.idTable.table[i].id << " PROC uses ebx ecx edi esi";
 
 			int cur = 1;
 			int firstLexIdx = lex.idTable.table[i].idxfirstLE;
 
-			// Обработка параметров функции
 			while (lex.lexTable.table[firstLexIdx + cur].lexema[0] != LEX_RIGHTTHESIS) {
 				auto& curLex = lex.lexTable.table[firstLexIdx + cur];
 
@@ -580,16 +652,14 @@ namespace CodeGeneration {
 				cur++;
 			}
 
-			// Обработка тела функции
 			int startPos = firstLexIdx + cur;
 			while (lex.lexTable.table[firstLexIdx + cur].lexema[0] != LEX_RETURN) {
 				cur++;
 			}
-			int endPos = firstLexIdx + cur + 4; // Учитываем возврат
+			int endPos = firstLexIdx + cur + 4; 
 
 			Expression(out, lex, startPos, endPos);
 
-			// Завершение процедуры
 			*out.stream << "ret\n";
 			*out.stream << "F" << lex.idTable.table[i].id << " ENDP\n\n";
 		}
