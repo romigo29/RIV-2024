@@ -1,0 +1,39 @@
+﻿Сборка начата 20.12.2024 09:11:50.
+Уровень детализации журнала: Normal.     1>Проект "D:\BSTU\course\RIV-2024\RIV-2024\RIV-2024\RIV-2024.vcxproj" в узле 2 (целевые объекты Build).
+     1>PrepareForBuild:
+         Структурированный вывод включен. Форматирование диагностики компилятора будет отражать иерархию ошибок. Подробнее см. https://aka.ms/cpp/structured-output.
+       InitializeBuildStatus:
+         Обращение к "Release\RIV-2024.tlog\unsuccessfulbuild".
+       ClCompile:
+         Для всех выходных данных обновления не требуется.
+       Link:
+         C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.42.34433\bin\HostX86\x86\link.exe /ERRORREPORT:PROMPT /OUT:"D:\BSTU\course\RIV-2024\RIV-2024\Release\RIV-2024.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\BSTU\course\RIV-2024\RIV-2024\Release\RIV-2024.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"Release\RIV-2024.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\BSTU\course\RIV-2024\RIV-2024\Release\RIV-2024.lib" /MACHINE:X86 /SAFESEH Release\CodeGeneration.obj
+         Release\Error.obj
+         Release\FST.obj
+         Release\GRB.obj
+         Release\In.obj
+         Release\IT.obj
+         Release\LA.obj
+         Release\Log.obj
+         Release\LT.obj
+         Release\MFST.obj
+         Release\Out.obj
+         Release\Parm.obj
+         Release\PolishNotation.obj
+         "Release\RIV-2024.obj"
+         Release\SA.obj
+         Создание кода
+         Previous IPDB not found, fall back to full compilation.
+         All 840 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+         Создание кода завершено
+         RIV-2024.vcxproj -> D:\BSTU\course\RIV-2024\RIV-2024\Release\RIV-2024.exe
+       FinalizeBuildStatus:
+         Файл "Release\RIV-2024.tlog\unsuccessfulbuild" удаляется.
+         Обращение к "Release\RIV-2024.tlog\RIV-2024.lastbuildstate".
+     1>Сборка проекта "D:\BSTU\course\RIV-2024\RIV-2024\RIV-2024\RIV-2024.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:02.68
