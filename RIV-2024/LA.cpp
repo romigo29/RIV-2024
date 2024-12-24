@@ -8,9 +8,9 @@
 
 namespace LA
 {
-    LT::lexTable lexTable = LT::Create(LT_MAXSIZE - 1);  //Таблица для хранения лексем
-    IT::idTable idTable = IT::Create(TI_MAXSIZE - 1);    //Таблица для хранения идентификаторов
-    //различные состояния программы
+    LT::lexTable lexTable = LT::Create(LT_MAXSIZE - 1); 
+    IT::idTable idTable = IT::Create(TI_MAXSIZE - 1);    
+
     bool byteFlag = false;
     bool intFlag = false;
     bool boolFlag = false;
@@ -23,9 +23,9 @@ namespace LA
     bool letFlag = false;
     bool keyWord = false;
     bool declareFunctionflag = false;
-    bool addedToITFlag = false; // Флаг добавления в таблицу идентификаторов
+    bool addedToITFlag = false; 
     bool literalFlag = false;
-    char* str = new char[MAX_LEX_SIZE];    //хранение текущей лексемы
+    char* str = new char[MAX_LEX_SIZE];    
 
     char FST()
     {
@@ -83,6 +83,7 @@ namespace LA
     {
         LEX tables;
         int indexIT;
+        int col = 0;
         LT::Entry current_entry_LT;
         int bufferIndex = 0;
         current_entry_LT.sn = 0;
@@ -100,6 +101,7 @@ namespace LA
         IT_file.open("IT.txt");
         for (int i = 0; i < in.size; i++)
         {
+            col++;
             if (in.code[(int)in.text[i]] == In::IN::T || in.text[i] == SINGLE_QUOTE || in.text[i] == DOUBLE_QUOTE || literalFlag)
             {
                 str[bufferIndex++] = in.text[i];
@@ -114,7 +116,7 @@ namespace LA
                 current_entry_LT.lexema[0] = FST();
                 switch (current_entry_LT.lexema[0])
                 {
-                case LEX_MAIN:
+                case LEX_MAIN: {
                     mainFlag = true;
                     current_entry_LT.idxTI = idTable.size;
                     memcpy(current_entry_IT.id, str, 5);
@@ -128,7 +130,7 @@ namespace LA
                     indexIT = IT::search(idTable, current_entry_IT);
                     if (indexIT >= 0)
                     {
-                        throw ERROR_THROW(120);
+                        throw ERROR_THROW(116);
                     }
                     if (indexIT == -1)
                     {
@@ -136,7 +138,8 @@ namespace LA
                         IT::Add(idTable, current_entry_IT);
                     }
                     break;
-                case LEX_LITERAL:
+                }
+                case LEX_LITERAL: {
                     current_entry_IT.idtype = IT::L;
                     current_entry_IT.iddatatype = IT::INT;
                     sprintf_s(current_entry_IT.id, "L%d", number_literal);
@@ -200,21 +203,22 @@ namespace LA
                         number_literal++;
                     }
                     break;
-                case LEX_ID:
-                    // Проверка области видимости
+                }
+                case LEX_ID: {
+ 
                     if (scope.empty())
-                        current_entry_IT.scope = NULL; // Если стек пуст, область видимости равна NULL
+                        current_entry_IT.scope = NULL;
                     else
-                        current_entry_IT.scope = scope.top(); // Установка области видимости как вершину стека
+                        current_entry_IT.scope = scope.top(); 
 
-                    current_entry_LT.idxTI = idTable.size; // Установка индекса для лексемы
-                    memcpy(current_entry_IT.id, str, ID_SIZE); // Копирование идентификатора в таблицу идентификаторов
-                    current_entry_IT.id[ID_SIZE] = '\0'; // Завершение строки идентификатора
-                    current_entry_IT.iddatatype = IT::INT; // Установка типа данных идентификатора
-                    current_entry_IT.value.vint = 0; // Значение инициализировано как 0
+                    current_entry_LT.idxTI = idTable.size;
+                    memcpy(current_entry_IT.id, str, ID_SIZE); 
+                    current_entry_IT.id[ID_SIZE] = '\0'; 
+                    current_entry_IT.iddatatype = IT::INT; 
+                    current_entry_IT.value.vint = 0; 
                     current_entry_IT.line = currentLine;
                     current_entry_IT.idxfirstLE = lexTable.size;
-                    current_entry_IT.idtype = IT::V; // Установка типа идентификатора как переменной
+                    current_entry_IT.idtype = IT::V; 
 
                     // Обработка случая, если предыдущая лексема - это объявление
                     if (lexTable.table[lexTable.size - 2].lexema[0] == LEX_DECLARE)
@@ -256,9 +260,14 @@ namespace LA
                             boolFlag = false;
                         }
 
+                        indexIT = IT::search(idTable, current_entry_IT); 
+                        if (indexIT != -1)
+                        {
+                            throw ERROR_THROW_IN(114, currentLine, col);
+                        }
                         letFlag = false;
-                        current_entry_LT.idxTI = idTable.size; // Установка индекса для лексемы
-                        IT::Add(idTable, current_entry_IT); // Добавление идентификатора в таблицу
+                        current_entry_LT.idxTI = idTable.size; 
+                        IT::Add(idTable, current_entry_IT); 
                         addedToITFlag = true;
                     }
 
@@ -277,7 +286,7 @@ namespace LA
 
                         if (lexTable.table[lexTable.size - 2].lexema[0] == LEX_CH && chFlag)
                         {
-                            throw ERROR_THROW(105);  // ТИП ФУНКЦИИ НЕ МОЖЕТ БЫТЬ char
+                            throw ERROR_THROW_IN(120, currentLine, col);
                         }
 
                         if (lexTable.table[lexTable.size - 2].lexema[0] == LEX_INT && intFlag)
@@ -297,19 +306,19 @@ namespace LA
                         // Если предыдущая лексема - строка и установлен флаг
                         if (lexTable.table[lexTable.size - 2].lexema[0] == LEX_STRING && stringFlag)
                         {
-                            current_entry_IT.iddatatype = IT::STR; // Установка типа данных идентификатора как строки
-                            strcpy_s(current_entry_IT.value.vstr->str, ""); // Инициализация строки
-                            stringFlag = false; // Сброс флага
+                            current_entry_IT.iddatatype = IT::STR; 
+                            strcpy_s(current_entry_IT.value.vstr->str, ""); 
+                            stringFlag = false; 
                         }
 
-                        indexIT = IT::search(idTable, current_entry_IT); // Поиск идентификатора в таблице
-                        if (indexIT != -1) // Если идентификатор уже существует
+                        indexIT = IT::search(idTable, current_entry_IT); 
+                        if (indexIT != -1) 
                         {
-                            throw ERROR_THROW(105); // Ошибка: идентификатор уже существует
+                            throw ERROR_THROW_IN(114, currentLine, col);
                         }
-                        current_entry_LT.idxTI = idTable.size; // Установка индекса для лексемы
-                        IT::Add(idTable, current_entry_IT); // Добавление идентификатора в таблицу
-                        addedToITFlag = true; // Установка флага добавления
+                        current_entry_LT.idxTI = idTable.size; 
+                        IT::Add(idTable, current_entry_IT); 
+                        addedToITFlag = true; 
                     }
 
                     // Проверка, является ли текущий идентификатор параметром функции
@@ -318,7 +327,7 @@ namespace LA
                         lexTable.table[lexTable.size - 3].idxTI == idTable.size - 1 &&
                         idTable.table[idTable.size - 1].idtype == IT::F)
                     {
-                        current_entry_IT.idtype = IT::P; // Установка типа идентификатора как параметра
+                        current_entry_IT.idtype = IT::P; 
 
                         if (lexTable.table[lexTable.size - 1].lexema[0] == LEX_BYTE && byteFlag)
                         {
@@ -347,14 +356,14 @@ namespace LA
                             strcpy_s(current_entry_IT.value.vstr->str, "");
                             stringFlag = false;
                         }
-                        indexIT = IT::search(idTable, current_entry_IT); // Поиск идентификатора в таблице
-                        if (indexIT != -1) // Если идентификатор уже существует
+                        indexIT = IT::search(idTable, current_entry_IT); 
+                        if (indexIT != -1) 
                         {
-                            throw ERROR_THROW(105); // Ошибка: идентификатор уже существует
+                            throw ERROR_THROW_IN(114, currentLine, col);
                         }
-                        current_entry_LT.idxTI = idTable.size; // Установка индекса для лексемы
-                        IT::Add(idTable, current_entry_IT); // Добавление идентификатора в таблицу
-                        addedToITFlag = true; // Установка флага добавления
+                        current_entry_LT.idxTI = idTable.size;
+                        IT::Add(idTable, current_entry_IT); 
+                        addedToITFlag = true; 
                         intFlag = false;
                         byteFlag = false;
                         boolFlag = false;
@@ -365,7 +374,7 @@ namespace LA
                     //несколько параметров
                     if (lexTable.table[lexTable.size - 2].lexema[0] == LEX_COMMA && idTable.table[lexTable.table[lexTable.size - 2].idxTI].idtype == IT::P)
                     {
-                        current_entry_IT.idtype = IT::P; // Установка типа идентификатора как параметра
+                        current_entry_IT.idtype = IT::P; 
 
                         if (lexTable.table[lexTable.size - 1].lexema[0] == LEX_BYTE && byteFlag)
                         {
@@ -402,14 +411,14 @@ namespace LA
                             stringFlag = false;
                         }
 
-                        indexIT = IT::search(idTable, current_entry_IT); // Поиск идентификатора в таблице
+                        indexIT = IT::search(idTable, current_entry_IT); 
 
-                        if (indexIT != -1) // Если идентификатор уже существует
+                        if (indexIT != -1) 
                         {
-                            throw ERROR_THROW(105); // Генерация ошибки: идентификатор уже существует
+                            throw ERROR_THROW_IN(114, currentLine, col);
                         }
 
-                        IT::Add(idTable, current_entry_IT); // Добавление идентификатора в таблицу
+                        IT::Add(idTable, current_entry_IT); 
                         addedToITFlag = true;
                         intFlag = false;
                         byteFlag = false;
@@ -418,32 +427,37 @@ namespace LA
                         stringFlag = false;
                     }
 
-                    if (!addedToITFlag) // Если идентификатор не был добавлен
+                    if (!addedToITFlag) 
                     {
-                        indexIT = IT::search(idTable, current_entry_IT); // Повторный поиск идентификатора в таблице
+                        indexIT = IT::search(idTable, current_entry_IT); 
 
-                        if (indexIT >= 0) // Если идентификатор найден
+                        if (indexIT >= 0) 
                         {
 
-                            current_entry_LT.idxTI = indexIT; // Установка индекса идентификатора для лексемы
+                            current_entry_LT.idxTI = indexIT; 
+                        }
+                        else {
+                            throw ERROR_THROW_IN(115, currentLine, col);
                         }
                     }
 
-                    memset(current_entry_IT.id, NULL, ID_SIZE); // Обнуление идентификатора
-                    current_entry_IT.iddatatype = IT::INT; // Установка типа данных идентификатора как байт числа
-                    current_entry_IT.value.vint = NULL; // Инициализация значения идентификатора
+                    memset(current_entry_IT.id, NULL, ID_SIZE); 
+                    current_entry_IT.iddatatype = IT::INT; 
+                    current_entry_IT.value.vint = NULL; 
                     addedToITFlag = false;
                     break;
+                }
 
-                case LEX_DECLARE:
+                case LEX_DECLARE: {
                     letFlag = true;
                     break;
+                }
 
                 case LEX_REST:
-                case LEX_MODULE:
+                case LEX_MODULE: {
                     current_entry_LT.idxTI = idTable.size;
-                    memcpy(current_entry_IT.id, str, 5);
-                    current_entry_IT.id[5] = '\0';
+                    memcpy(current_entry_IT.id, str, ID_SIZE);
+                    current_entry_IT.id[ID_SIZE] = '\0';
                     current_entry_IT.iddatatype = IT::BYTE;
                     current_entry_IT.idtype = IT::SF;
                     current_entry_IT.value.vint = NULL;
@@ -456,21 +470,27 @@ namespace LA
 
                     current_entry_LT.idxTI = idTable.size;
                     IT::Add(idTable, current_entry_IT);
-  
+
                     break;
+                }
+                }
+
+                 if (current_entry_LT.lexema[0] == NULL && str[0] != '\0') {
+                    throw ERROR_THROW_IN(113, currentLine, col);
                 }
 
                 bufferIndex = 0;
-                memset(str, 0, sizeof(str));;
+                memset(str, 0, sizeof(str));
             }
-            if (current_entry_LT.lexema[0] != NULL)    //если лексема распозналась
+            if (current_entry_LT.lexema[0] != NULL)    
             {
-                current_entry_LT.sn = currentLine;    // добавляем ее в таблицу
+                current_entry_LT.sn = currentLine;    
                 LT::Add(lexTable, current_entry_LT);
-                current_entry_LT.lexema[0] = NULL;    // обнуляем лексему
+                current_entry_LT.lexema[0] = NULL;   
+
             }
 
-            if (lexTable.table[lexTable.size - 3].lexema[0] == LEX_DECLARE && keyWord) {
+            if (lexTable.table[lexTable.size - 4].lexema[0] == LEX_DECLARE && keyWord) {
                 throw ERROR_THROW(113);
             }
 
@@ -479,14 +499,18 @@ namespace LA
             if ((literalFlag && in.text[i] != '\'') && (literalFlag && in.text[i] != '"'))
                 continue;
 
-            /*-----------------------------------------------------------------------------------------------------------------*/
             switch (in.text[i])
             {
 
-            case SINGLE_QUOTE:
+            case SINGLE_QUOTE: {
                 literalFlag = true;
                 if (str[1] == SINGLE_QUOTE && bufferIndex != 1 && str[2] != SINGLE_QUOTE) // Учитываем длину 1
                 {
+
+                    if (bufferIndex > MAX_CH_SIZE) {
+                        throw ERROR_THROW_IN(123, currentLine, col);
+                    }
+
                     current_entry_IT.iddatatype = IT::CH; // Тип данных — символ
                     current_entry_IT.value.vchar = str[2]; // Сохраняем символ из строки
 
@@ -516,11 +540,17 @@ namespace LA
                 str[bufferIndex] = SINGLE_QUOTE;
                 bufferIndex++;
                 break;
-            case DOUBLE_QUOTE:
+            }
+            case DOUBLE_QUOTE: {
 
                 literalFlag = true;
                 if (str[0] == DOUBLE_QUOTE && bufferIndex != 1)
                 {
+
+                    if (bufferIndex > MAX_STR_SIZE) {
+                        throw ERROR_THROW_IN(124, currentLine, col);
+                    }
+
                     current_entry_IT.iddatatype = IT::STR;
                     for (int i = 0; i < bufferIndex; i++)
                     {
@@ -530,7 +560,6 @@ namespace LA
                     current_entry_IT.value.vstr->len = bufferIndex;
                     number_literal++;
 
-
                     current_entry_LT.idxTI = idTable.size;
                     str[bufferIndex] = '\0';
                     literalFlag = false;
@@ -539,7 +568,7 @@ namespace LA
                     current_entry_IT.idtype = IT::L;
                     current_entry_IT.line = currentLine;
                     current_entry_IT.idxfirstLE = lexTable.size;
-                    
+
                     current_entry_LT.sn = currentLine;
                     if (!scope.empty())
                         current_entry_IT.scope = scope.top();
@@ -554,18 +583,22 @@ namespace LA
                 }
                 /*bufferIndex++;*/
                 break;
-            case NEW_LINE:
+            }
+            case NEW_LINE: {
+                col = 0;
                 current_entry_LT.sn = currentLine++;
                 current_entry_LT.lexema[0] = NULL;
                 break;
-            case SEMICOLON:
+            }
+            case SEMICOLON: {
                 current_entry_LT.lexema[0] = LEX_SEMICOLON;
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
                 current_entry_LT.lexema[0] = NULL;
                 break;
-            case LEFT_BRACE:
-                
+            }
+            case LEFT_BRACE: {
+
                 current_entry_LT.lexema[0] = LEX_LEFTBRACE;
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
@@ -573,28 +606,44 @@ namespace LA
 
                 if (mainFlag)
                 {
-                    scope.push(&idTable.table[idTable.size - 1]);
+                    if (idTable.table[idTable.size - 1].idtype != IT::L) 
+                    {
+                        scope.push(&idTable.table[idTable.size - 1]);
+                    }
+                    else {
+                        for (int j = idTable.size - 1; j >= 0; j--) 
+                        {
+                            if (idTable.table[j].idtype == IT::M) 
+                            {
+                                scope.push(&idTable.table[j]); 
+                                break; 
+                            }
+                        }
+                    }
                 }
                 else {
-                    for (int j = idTable.size - 1; j >= 0; j--) // Перебор таблицы идентификаторов с конца
+                    for (int j = idTable.size - 1; j >= 0; j--) 
                     {
-                        if (idTable.table[j].idtype == IT::F) // Если идентификатор - функция
+                        if (idTable.table[j].idtype == IT::F) 
                         {
-                            scope.push(&idTable.table[j]); // Добавление функции в область видимости
-                            break; // Выход из цикла
+                            scope.push(&idTable.table[j]); 
+                            break; 
                         }
                     }
                 }
                 break;
-            case RIGHT_BRACE:
+            }
+            case RIGHT_BRACE: {
                 current_entry_LT.lexema[0] = LEX_RIGHTBRACE;
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
                 current_entry_LT.lexema[0] = NULL;
-                if (!scope.empty()) // Если стек области видимости не пуст
-                    scope.pop(); // Удаление верхнего элемента из стека
+                if (!scope.empty()) 
+                    scope.pop(); 
+
                 break;
-            case LEFTTHESIS:
+            }
+            case LEFTTHESIS: {
                 current_entry_LT.lexema[0] = LEX_LEFTTHESIS;
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
@@ -611,7 +660,8 @@ namespace LA
                     }
                 }
                 break;
-            case RIGHTTHESIS:
+            }
+            case RIGHTTHESIS: {
                 current_entry_LT.lexema[0] = LEX_RIGHTTHESIS;
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
@@ -623,17 +673,18 @@ namespace LA
                     declareFunctionflag = false;
                 }
                 break;
- 
+            }
+
             case COMMA:
             case EQUAL:
-            case TILDE:
+            case TILDE: {
                 current_entry_LT.lexema[0] = in.text[i];
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
                 current_entry_LT.lexema[0] = NULL;
                 break;
-
-            case AMPERSAND:
+            }
+            case AMPERSAND: {
                 current_entry_LT.lexema[0] = LEX_OPERATION;
                 current_entry_LT.lexema[1] = AMPERSAND;
                 current_entry_LT.sn = currentLine;
@@ -641,7 +692,8 @@ namespace LA
                 current_entry_LT.lexema[0] = NULL;
                 current_entry_LT.lexema[1] = NULL;
                 break;
-            case PIPE:
+            }
+            case PIPE: {
                 current_entry_LT.lexema[0] = LEX_OPERATION;
                 current_entry_LT.lexema[1] = PIPE;
                 current_entry_LT.sn = currentLine;
@@ -649,7 +701,9 @@ namespace LA
                 current_entry_LT.lexema[0] = NULL;
                 current_entry_LT.lexema[1] = NULL;
                 break;
+            }
             case PLUS:
+            {
                 current_entry_LT.lexema[0] = LEX_OPERATION;
                 current_entry_LT.lexema[1] = PLUS;
                 current_entry_LT.sn = currentLine;
@@ -657,7 +711,9 @@ namespace LA
                 current_entry_LT.lexema[0] = NULL;
                 current_entry_LT.lexema[1] = NULL;
                 break;
+            }
             case MINUS:
+            {
                 current_entry_LT.lexema[0] = LEX_OPERATION;
                 current_entry_LT.lexema[1] = MINUS;
                 current_entry_LT.sn = currentLine;
@@ -665,7 +721,9 @@ namespace LA
                 current_entry_LT.lexema[0] = NULL;
                 current_entry_LT.lexema[1] = NULL;
                 break;
+            }
             case STAR:
+            {
                 current_entry_LT.lexema[0] = LEX_OPERATION;
                 current_entry_LT.lexema[1] = STAR;
                 current_entry_LT.sn = currentLine;
@@ -673,7 +731,9 @@ namespace LA
                 current_entry_LT.lexema[0] = NULL;
                 current_entry_LT.lexema[1] = NULL;
                 break;
+            }
             case DIRSLASH:
+            {
                 current_entry_LT.lexema[0] = LEX_OPERATION;
                 current_entry_LT.lexema[1] = DIRSLASH;
                 current_entry_LT.sn = currentLine;
@@ -681,20 +741,26 @@ namespace LA
                 current_entry_LT.lexema[0] = NULL;
                 current_entry_LT.lexema[1] = NULL;
                 break;
+            }
 
-            case LEX_GREATER:
-                current_entry_LT.lexema[0] = LEX_GREATER;
+            case GREATER:
+                memset(current_entry_LT.lexema, 0, 5);
+                current_entry_LT.lexema[0] = LEX_COMPARISON;
+                current_entry_LT.lexema[1] = GREATER;
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
                 current_entry_LT.lexema[0] = NULL;
                 break;
-
-            case LEX_LESS:
-                current_entry_LT.lexema[0] = LEX_LESS;
+            case LESS:
+            {
+                memset(current_entry_LT.lexema, 0, 5);
+                current_entry_LT.lexema[0] = LEX_COMPARISON;
+                current_entry_LT.lexema[1] = LESS;
                 current_entry_LT.sn = currentLine;
                 LT::Add(lexTable, current_entry_LT);
                 current_entry_LT.lexema[0] = NULL;
                 break;
+            }
             }
         }
 

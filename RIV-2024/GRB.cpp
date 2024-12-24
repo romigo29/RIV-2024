@@ -37,7 +37,6 @@ namespace GRB
 		return greibach;
 	}
 
-	//возвращает номер следующего правила грамматики (или -1)
 	short Greibach::getRule(GRBALPHABET pnn, Rule& prule)
 	{
 		short rc = -1, k = 0;
@@ -48,7 +47,6 @@ namespace GRB
 		return rc;
 	}
 
-	//возвращает правило с номером n
 	Rule Greibach::getRule(short n)
 	{
 		Rule rc;
@@ -56,7 +54,7 @@ namespace GRB
 			rc = rules[n];
 		return rc;
 	}
-	char* Rule::getCRule(char* b, short nchain)		//получить правило в виде N -> цепочка
+	char* Rule::getCRule(char* b, short nchain)		
 	{
 		char buf[200];
 		b[0] = Chain::alphabet_to_char(this->nn);
@@ -69,7 +67,6 @@ namespace GRB
 		return b;
 	}
 
-	//подбор подходящего правила
 	short Rule::getNextChain(GRBALPHABET t, Rule::Chain& pchain, short j)
 	{
 		short rc = -1;
@@ -82,7 +79,7 @@ namespace GRB
 			pchain = chains[rc];
 		return rc;
 	}
-	char* Rule::Chain::getCChain(char* b)		//получить правую сторону цепочки
+	char* Rule::Chain::getCChain(char* b)		
 	{
 		for (int i = 0; i < this->size; i++)
 			b[i] = Chain::alphabet_to_char(this->nt[i]);

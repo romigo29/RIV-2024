@@ -1,9 +1,9 @@
 #pragma once
 #include "stdafx.h"
+#define MAX_PARM_COUNT 4
 using namespace std;
 namespace SA {
 
-	bool SA(LA::LEX& lex, Log::LOG log);
-	bool DivisionByZero(LT::lexTable& lexTable, IT::idTable& idTable, int index);
+	bool startSA(LA::LEX lex);
 
 };

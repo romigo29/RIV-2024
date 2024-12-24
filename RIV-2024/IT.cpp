@@ -50,13 +50,21 @@ namespace IT
 	}
 	int IsId(idTable& idTable, char id[ID_MAXSIZE])
 	{
-		// Проход по всем элементам таблицы идентификаторов
+
 		for (int i = 0; i < idTable.size; i++) {
-			// Сравнение переданного идентификатора с текущим в таблице
 			if (strcmp(idTable.table[i].id, id) == 0) {
-				return idTable.table[i].idxfirstLE;  // Возврат номера строки, если идентификатор найден
+				return idTable.table[i].idxfirstLE;  
 			}
 		}
-		return TI_NULLIDX;  // Возвращаем специальную константу, если идентификатор не найден
+		return TI_NULLIDX; 
+	}
+
+	void Delete(idTable& idtable) {
+		if (idtable.table != nullptr) {
+			delete[] idtable.table;
+			idtable.table = nullptr;
+			idtable.size = 0;
+			idtable.maxsize = 0;
+		}
 	}
 }

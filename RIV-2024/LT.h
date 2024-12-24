@@ -27,10 +27,7 @@
 #define LEX_RIGHTTHESIS ')'
 #define LEX_OPERATION 'v'
 #define LEX_EQUAL '='
-#define LEX_GREATER '>'
-#define LEX_LESS '<'
-#define LEX_GE 'g' //>=
-#define LEX_LE 'u' //<=
+#define LEX_COMPARISON 'b'
 
 namespace LT
 {

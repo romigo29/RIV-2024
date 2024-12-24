@@ -34,12 +34,12 @@ namespace In
         int size = 0;
         int lines = 0;
         int ignore = 0;
-        unsigned char* text;
+        unsigned char* text = 0;
         int code[256] = IN_CODE_TABLE;
         int error_size = 0;                 //количество запрещенной символов
-        unsigned char* forbiddenChar;   //хранение запрещенных символов
-        int* errorLine;                 //номера строк с запрещенными символами
-        int* errorCol;                  //позиции запрещенных символов
+        unsigned char* forbiddenChar = 0;   //хранение запрещенных символов
+        int* errorLine = 0;                 //номера строк с запрещенными символами
+        int* errorCol = 0;                  //позиции запрещенных символов
     };
     IN getin(wchar_t infile[]);
 

@@ -15,7 +15,6 @@ map<char, int>Priorities = {
 	{',',8},
 };
 
-
 namespace PN {
 
 	bool polishNotation(int i, LA::LEX& lex)
@@ -147,5 +146,4 @@ namespace PN {
 		}
 		return true;
 	}
-
 }

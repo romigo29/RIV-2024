@@ -2,7 +2,7 @@
 #include "Parm.h"
 #include "Error.h"
 
-namespace Parm {    //проверка обязательного параметра in
+namespace Parm {    
 
 	PARM getparm(int argc, _TCHAR* argv[]) {
 
@@ -13,18 +13,18 @@ namespace Parm {    //проверка обязательного параметра in
 				throw ERROR_THROW(104);
 			}
 
-			if (!wcsncmp(argv[i], PARM_IN, wcslen(PARM_IN))) {  //сравнение строк символами количеством wcslen(PARM_IN)
+			if (!wcsncmp(argv[i], PARM_IN, wcslen(PARM_IN))) { 
 				wcscpy_s(parm.in, argv[i] + wcslen(PARM_IN));
 				in = true;
 			}
-			else if (!wcsncmp(argv[i], PARM_OUT, wcslen(PARM_OUT))) {  //если строка начинается с PARM_OUT
+			else if (!wcsncmp(argv[i], PARM_OUT, wcslen(PARM_OUT))) { 
 				wcscpy_s(parm.out, argv[i] + wcslen(PARM_OUT));
-				wcscat_s(parm.out, PARM_OUT_DEFAULT_EXT);  // добавляем расширение out
+				wcscat_s(parm.out, PARM_OUT_DEFAULT_EXT);  
 				out = true;
 			}
-			else if (!wcsncmp(argv[i], PARM_LOG, wcslen(PARM_LOG))) {  //если строка начинается с PARM_LOG
+			else if (!wcsncmp(argv[i], PARM_LOG, wcslen(PARM_LOG))) {  
 				wcscpy_s(parm.log, argv[i] + wcslen(PARM_LOG));
-				wcscat_s(parm.log, PARM_LOG_DEFAULT_EXT);  // добавляем расширение log
+				wcscat_s(parm.log, PARM_LOG_DEFAULT_EXT);  
 				log = true;
 			}
 		}
@@ -33,8 +33,8 @@ namespace Parm {    //проверка обязательного параметра in
 			throw ERROR_THROW(100);
 		}
 		if (!out) {
-			wcscpy_s(parm.out, parm.in);			   //используем имя исходное файла и для out
-			wcscat_s(parm.out, PARM_OUT_DEFAULT_EXT);  //добавляем расширение out
+			wcscpy_s(parm.out, parm.in);			  
+			wcscat_s(parm.out, PARM_OUT_DEFAULT_EXT);  
 		}
 		if (!log) {
 			wcscpy_s(parm.log, parm.in);

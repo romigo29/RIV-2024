@@ -2,9 +2,9 @@
 #include "In.h"
 #include "Error.h"
 
-namespace In {     // посимвольно вводит данные из файла, заданного параметром
+namespace In {     
     IN getin(wchar_t infile[]) {
-        IN in; // структура in для заполнения
+        IN in; 
         int cols = 1, error_pos = 0;
         in.text = new unsigned char[IN_MAX_LEN_TEXT];
         in.forbiddenChar = new unsigned char[IN_MAX_LEN_TEXT];
@@ -19,9 +19,9 @@ namespace In {     // посимвольно вводит данные из фа
             throw ERROR_THROW(110);
         }
 
-        char* buff = new char[BUFF_SIZE];  // Читаем строки длиной до 1000 символов
+        char* buff = new char[BUFF_SIZE];  
 
-        while (fin.getline(buff, BUFF_SIZE)) {  // Чтение файла построчно
+        while (fin.getline(buff, BUFF_SIZE)) {  
 
             in.lines++;
             cols = 1;
@@ -30,23 +30,24 @@ namespace In {     // посимвольно вводит данные из фа
        
                 switch (in.code[int((unsigned char)buff[position])])  {
 
-                case IN::T: // Добавление символа в структуру
+                case IN::T: 
                     in.text[in.size++] = (unsigned)buff[position];  
                     cols++;
                     break;
 
-                case IN::I:  // Символ должен быть проигнорирован
+                case IN::I: 
                     in.ignore++;
                     cols++;  
 
                     break;
 
-                case IN::F:  // Символ запрещен
+                case IN::F:  
                     in.forbiddenChar[error_pos] = buff[position];
                     in.text[in.size++] = '^';   // Запрещенный символ помечается символом '^'
-                    in.errorLine[error_pos] = in.lines;  // Строка ошибки
-                    in.errorCol[error_pos++] = position + 1;   // Позиция ошибки
+                    in.errorLine[error_pos] = in.lines;  
+                    in.errorCol[error_pos++] = position + 1;  
                     in.error_size++;
+                    throw ERROR_THROW_IN(121, in.lines, cols);
                     break;
                     
                 case IN::P:
@@ -82,7 +83,7 @@ namespace In {     // посимвольно вводит данные из фа
 
                     //кавычки
                     if (buff[position] == SINGLE_QUOTE) {
-                        if (!isSingleQuotesOpened) {
+                        if (!isSingleQuotesOpened && !isDoubleQuotesOpened) {
                             isSingleQuotesOpened = true;
                         }
 
@@ -92,7 +93,7 @@ namespace In {     // посимвольно вводит данные из фа
                     }
 
                     else if (buff[position] == DOUBLE_QUOTE) {
-                        if (!isDoubleQuotesOpened) {
+                        if (!isDoubleQuotesOpened && !isSingleQuotesOpened) {
                             isDoubleQuotesOpened = true;
                         }
 
@@ -103,7 +104,7 @@ namespace In {     // посимвольно вводит данные из фа
 
                     break;
 
-                default:  // Символ может быть заменен на другой символ
+                default:  
                     in.text[in.size++] = static_cast<unsigned char>(in.code[buff[position]]);
                     cols++;
                     break;
@@ -114,11 +115,16 @@ namespace In {     // посимвольно вводит данные из фа
                 in.text[in.size++] = '\n';
             }
         }
-
-        in.text[in.size] = '\0';   // Устанавливаем нуль-символ в конец таблицы
-        fin.close();           // Закрываем файл
+  
+        in.text[in.size] = '\0';   
+        fin.close();           
         delete[] buff;
-        return in;  // Возвращаем результат после обработки всех строк
+
+        if (isSingleQuotesOpened || isDoubleQuotesOpened) {
+            throw ERROR_THROW(122);
+        }
+
+        return in; 
     }
     void deleteIn(IN in)
     {

@@ -1,64 +1,44 @@
-.586P
-.model flat, stdcall
-includelib libucrt.lib
-includelib kernel32.lib
-includelib ../Debug/LIB.lib
-ExitProcess PROTO : DWORD
+byte function getAnd(byte a,byte b){
+return a&b;
+}
 
-SetConsoleCP PROTO : DWORD
+int function getMul(int a,int b){
+return a*b;
+}
 
-SetConsoleOutputCP PROTO : DWORD
+main{
 
-module PROTO : BYTE 
+let byte yesor=3|5;
+let byte inversion=~4;
+let byte yesand=getAnd(4,5)+getAnd(4,5);
 
-rest PROTO : BYTE, : BYTE 
+print(yesor);
+print(inversion);
+print(yesand);
 
-writestr PROTO : DWORD 
+let byte rv=rest(yesor,yesand);
+let byte mv=module(inversion);
 
-writeint PROTO : BYTE 
+print(rv);
+print(mv);
 
-writebool PROTO : BYTE 
+let int iv=getMul(155,198);
+print(iv);
+let ch symbol='I';
+let str stroka="dont mind";
+print(symbol);
+print("Вывод строки");
 
-writechar PROTO : BYTE 
+let bool flag=0;
 
-.stack 4096
+if(inversion>2){
+flag=1;
+print(flag);
+}
+else{
+print(flag);
+}
 
-.const
-L0 SBYTE 10 ; byte
-L1 SBYTE 3 ; byte
-L2 SBYTE -2 ; byte
+print(yesor);
 
-.data
-r1 SDWORD 0 ; int
-m1 SDWORD 0 ; int
-
-.code
-main PROC
-Invoke SetConsoleCP, 1251
-Invoke SetConsoleOutputCP, 1251
-
-; string #3 : i=ll@2##
-movsx eax, L1
-push eax
-movsx eax, L0
-push eax
-CALL rest
-mov r1, al
-
-mov eax, r1
-push eax
-CALL writeint
-
-; string #6 : i=l@1#
-movsx eax, L2
-push eax
-CALL module
-mov m1, al
-
-mov eax, m1
-push eax
-CALL writeint
-push -1
-call ExitProcess
-main ENDP
-end main
+}

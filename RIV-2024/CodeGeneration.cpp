@@ -13,8 +13,8 @@ namespace CodeGeneration {
 		*out.stream << "ExitProcess PROTO : DWORD\n\n";
 		*out.stream << "SetConsoleCP PROTO : DWORD\n\n";
 		*out.stream << "SetConsoleOutputCP PROTO : DWORD\n\n";
-		*out.stream << "module PROTO : BYTE \n\n";
-		*out.stream << "rest PROTO : BYTE, : BYTE \n\n";
+		*out.stream << "module PROTO : DWORD \n\n";
+		*out.stream << "rest PROTO : DWORD, : BYTE \n\n";
 		*out.stream << "writestr PROTO : DWORD \n\n";
 		*out.stream << "writeint PROTO : BYTE \n\n";
 		*out.stream << "writebool PROTO : BYTE \n\n";
@@ -29,23 +29,20 @@ namespace CodeGeneration {
 				*out.stream << lex.idTable.table[i].id;
 				switch (lex.idTable.table[i].iddatatype)
 				{
-				case IT::BYTE: {
-					*out.stream << " SBYTE " << (int)lex.idTable.table[i].value.vbyte << " ; byte";
-					break;
-				}
 				case IT::CH: {
-					*out.stream << " BYTE " << (int)lex.idTable.table[i].value.vchar << " ; symbol";
+					*out.stream << " BYTE " << (int)lex.idTable.table[i].value.vchar << " ; ch";
 					break;
 				}
 				case IT::STR: {
-					*out.stream << " DB " << lex.idTable.table[i].value.vstr->str << ", 0 ; text";
+					*out.stream << " DB " << lex.idTable.table[i].value.vstr->str << ", 0 ; str";
 					break;
 				}
 				case IT::BOOL: {
-					*out.stream << " BYTE " << lex.idTable.table[i].value.vbool << " ; boolean";
+					*out.stream << " BYTE " << lex.idTable.table[i].value.vbool << " ; bool";
 				}
+				case IT::BYTE:
 				case IT::INT: {
-					*out.stream << " DWORD " << lex.idTable.table[i].value.vint << " ; integer (4 bytes)";
+					*out.stream << " DWORD " << lex.idTable.table[i].value.vint << " ; int (4 bytes)";
 					break;
 				}
 				}
@@ -61,10 +58,7 @@ namespace CodeGeneration {
 			if (lex.idTable.table[i].idtype == IT::V) {
 				*out.stream << lex.idTable.table[i].id;
 				switch (lex.idTable.table[i].iddatatype) {
-				case IT::BYTE: {
-					*out.stream << " SBYTE 0 ; byte";
-					break;
-				}
+				case IT::BYTE:
 				case IT::INT: {
 					*out.stream << " SDWORD 0 ; int";
 					break;
@@ -93,34 +87,41 @@ namespace CodeGeneration {
 			switch (lex.lexTable.table[i].lexema[0]) {
 			case LEX_OPERATION: {
 
-				int operandsAmount = 1;
-				int j = 0;
-				while (lex.lexTable.table[i - operandsAmount - 1].lexema[0] == LEX_ID || lex.lexTable.table[i - operandsAmount - 1].lexema[0] == LEX_LITERAL) {
-					operandsAmount++;
-				}
-
 				char operation = lex.lexTable.table[i].lexema[1];
 
 				IT::Entry* leftOperand = nullptr;
 				IT::Entry* rightOperand = nullptr;
 				IT::Entry* result = nullptr;
+				int iterator = 1;
+				while (!leftOperand || !rightOperand || !result) {
+					if (i - iterator < 0) {
+						break;
+					}
 
-				if (operandsAmount == 1) {
-					leftOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount].idxTI];
-					rightOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount + 1].idxTI];
-					result = &lex.idTable.table[lex.lexTable.table[i - operandsAmount - 2].idxTI];
-				}
-				else if (operandsAmount > 1) {
-					leftOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount].idxTI];
-					rightOperand = &lex.idTable.table[lex.lexTable.table[i - operandsAmount - 2].idxTI];
-					result = &lex.idTable.table[lex.lexTable.table[i - operandsAmount - 4].idxTI];
+					// Получение текущей лексемы
+					const auto& currentLex = lex.lexTable.table[i - iterator];
+					if (!leftOperand && currentLex.lexema[0] != ';') {
+						leftOperand = &lex.idTable.table[currentLex.idxTI];
+					}
+					else if (!rightOperand && (i - iterator - 1) >= 0) {
+						const auto& nextLex = lex.lexTable.table[i - iterator - 1];
+						if (nextLex.lexema[0] != ';') {
+							rightOperand = &lex.idTable.table[nextLex.idxTI];
+						}
+					}
+					else if (!result && (i - iterator - 2) >= 0) {
+						const auto& resultLex = lex.lexTable.table[i - iterator - 2];
+						if (resultLex.lexema[0] != ';') {
+							result = &lex.idTable.table[resultLex.idxTI];
+						}
+					}
+					iterator++;
 				}
 
 				switch (operation) {
 				case PLUS: { 
 					*out.stream << "; Addition\n";
 
-					if (operandsAmount > 1) {
 						if (leftOperand->iddatatype == IT::BYTE && rightOperand->iddatatype == IT::BYTE) {
 							*out.stream << "mov al, " << leftOperand->id << "\n";
 							*out.stream << "add al, " << rightOperand->id << "\n";
@@ -131,26 +132,7 @@ namespace CodeGeneration {
 							*out.stream << "add eax, " << rightOperand->id << "\n";
 							*out.stream << "mov " << result->id << ", eax\n";
 						}
-					}
 
-					if (operandsAmount == 1) {
-
-						j = operandsAmount;
-						while (lex.lexTable.table[i - j - 1].lexema[0] != LEX_EQUAL) {
-							j++;
-						}
-
-						if (leftOperand->iddatatype == IT::BYTE) {
-							*out.stream << "add al, " << leftOperand->id << "\n";
-
-							result = &lex.idTable.table[lex.lexTable.table[i - j - 2].idxTI];
-							*out.stream << "mov " << result->id << ", al\n";
-						}
-						else if (leftOperand->iddatatype == IT::INT) {
-							*out.stream << "add eax, " << leftOperand->id << "\n";
-							*out.stream << "mov " << result->id << ", eax\n";
-						}
-					}
 					break;
 				}
 				case MINUS: { 
@@ -177,12 +159,6 @@ namespace CodeGeneration {
 						*out.stream << "movsx bx, " << rightOperand->id << "\n"; 
 						*out.stream << "imul eax, ebx\n";                         
 
-						if (result->iddatatype == IT::BYTE) {
-							*out.stream << "mov " << result->id << ", al\n";
-						}
-						else if (result->iddatatype == IT::INT) {
-							*out.stream << "mov " << result->id << ", eax\n";
-						}
 					}
 					else if (leftOperand->iddatatype == IT::INT && rightOperand->iddatatype == IT::INT) {
 						*out.stream << "mov eax, " << leftOperand->id << "\n"; 
@@ -249,113 +225,50 @@ namespace CodeGeneration {
 			case LEX_EQUAL: {
 				*out.stream << "\n" << "; string #" << lex.lexTable.table[i].sn << " : ";
 				int parmsAmount = 0;
-				for (int j = -1; lex.lexTable.table[i + j].lexema[0] != LEX_SEMICOLON; j++) {
-					*out.stream << lex.lexTable.table[i + j].lexema[0];
-					if (lex.lexTable.table[i + j].lexema[0] == '@') {
-						parmsAmount = lex.lexTable.table[i + j + 1].lexema[0] - '0';
-					}
-				}
 
-				*out.stream << "\n";
-				bool isArgs = false;
-				IT::Entry* func, * save = nullptr;
-				IT::Entry* recipent = &lex.idTable.table[lex.lexTable.table[i - 1].idxTI];
-				IT::Entry* sender = &lex.idTable.table[lex.lexTable.table[i + parmsAmount + 1].idxTI];
+				int statrt = i + 1;
 
-				if (sender->idtype != IT::F && sender->idtype != IT::SF) {
-					switch (recipent->iddatatype) {
-					case IT::BYTE:
-					case IT::CH:
-					case IT::BOOL:
+				while (i < lex.lexTable.size && lex.lexTable.table[i].lexema[0] != LEX_SEMICOLON) i++;
+				*out.stream << ";aboba\n";
+
+				if (statrt == i - 1)
+				{
+
+					if (lex.idTable.table[lex.lexTable.table[statrt].idxTI].iddatatype == IT::INT ||
+						lex.idTable.table[lex.lexTable.table[statrt].idxTI].iddatatype ==IT::BYTE)
 					{
-						*out.stream << "mov al, " << sender->id << "\n";
-						*out.stream << "mov " << recipent->id << ", al \n";
-						break;
+						*out.stream << "mov eax, " << lex.idTable.table[lex.lexTable.table[statrt].idxTI].id << "\n";
+		
 					}
-
-					case IT::INT: {
-
-						if (sender->iddatatype == IT::BYTE) {
-							*out.stream << "movzx eax, " << sender->id << "\n"; 
-						}
-						else {
-							*out.stream << "mov eax, " << sender->id << "\n"; 
-						}
-						*out.stream << "mov " << recipent->id << ", eax\n";
-						break;
-					}
-
-					case IT::STR: { 
-						if (sender->idtype == IT::L) {
-							*out.stream << "push offset " << sender->id << '\n';
-							*out.stream << "pop eax\n";
-							*out.stream << "mov " << recipent->id << ", eax \n";
-						}
-						else {
-							*out.stream << "mov esi, " << "offset " << sender->id << "\n";
-							*out.stream << "mov edi, " << "offset " << recipent->id << "\n\n";
-							*out.stream << "copy_loop: \n";
-							*out.stream << "lodsd \n";
-							*out.stream << "stosd \n";
-							*out.stream << "cmp eax, 0 \n";
-							*out.stream << "jnz copy_loop \n";
-						}
-						break;
-					}
-					}
-				}
-				else {
-					stack<IT::Entry> stackForParams;
-					int iterator = 1;
-					while (lex.lexTable.table[i + iterator].lexema[0] != '@') {
-						stackForParams.push(lex.idTable.table[lex.lexTable.table[i + iterator].idxTI]);
-						iterator += 1;
-					}
-					while (!stackForParams.empty()) {
-						switch (stackForParams.top().iddatatype) {
-						case IT::BYTE:
-						case IT::BOOL:
-						case IT::CH: {
-							*out.stream << "movsx eax, " << stackForParams.top().id << "\n";
-							*out.stream << "push eax\n";
-							break;
-						}
-
-						case IT::INT: {
-							*out.stream << "mov eax, " << stackForParams.top().id << "\n";
-							*out.stream << "push eax\n";
-							break;
-						}
-						case IT::STR: {
-							if (stackForParams.top().idtype == IT::L) {
-								*out.stream << "push OFFSET " << stackForParams.top().id << "\n";
-							}
-							else {
-								*out.stream << "push " << stackForParams.top().id << "\n";
-							}
-							break;
-						}
-						}
-						stackForParams.pop();
-					}
-					if (sender->idtype == IT::F) {
-						*out.stream << "CALL F" << sender->id << "\n";
+					else if (lex.idTable.table[lex.lexTable.table[statrt].idxTI].iddatatype == IT::STR)
+					{
+						*out.stream << "mov eax, OFFSET " << lex.idTable.table[lex.lexTable.table[statrt].idxTI].id << "\n";
 					}
 					else {
-						if (strcmp(sender->id, "rest") == 0) {
-							*out.stream << "CALL rest" << "\n";
-						}
-						if (strcmp(sender->id, "module") == 0) {
-							*out.stream << "CALL module" << "\n";
-						}
+						*out.stream << "movsx eax, " << lex.idTable.table[lex.lexTable.table[statrt].idxTI].id << "\n";
 					}
-					if (sender->iddatatype == IT::BYTE || sender->iddatatype == IT::BOOL || sender->iddatatype == IT::CH) {
-						*out.stream << "mov " << recipent->id << ", al\n";
+
+					if (lex.idTable.table[lex.lexTable.table[statrt - 1].idxTI].iddatatype == IT::INT ||
+						lex.idTable.table[lex.lexTable.table[statrt - 1].idxTI].iddatatype == IT::BYTE)
+					{
+						*out.stream << "mov " << lex.idTable.table[lex.lexTable.table[statrt - 1].idxTI].id << ", eax\n";
+
 					}
+
+					else if (lex.idTable.table[lex.lexTable.table[statrt - 1].idxTI].iddatatype == IT::STR) {
+						*out.stream << "mov [" << lex.idTable.table[lex.lexTable.table[statrt - 1].idxTI].id << "], eax\n";
+					}
+
 					else {
-						*out.stream << "mov " << recipent->id << ", eax\n";
+						*out.stream << "mov " << lex.idTable.table[lex.lexTable.table[statrt - 1].idxTI].id << ", al\n";
 					}
+					break;
 				}
+
+				ExpressionHandler(out.stream, lex, statrt, i - 1);
+				*out.stream << "mov " << lex.idTable.table[lex.lexTable.table[statrt - 2].idxTI].id << ", eax\n";
+
+				
 				break;
 			}
 			case LEX_IF: {
@@ -408,10 +321,10 @@ namespace CodeGeneration {
 					case LEX_LEFTBRACE: {
 						if (second == nullptr) {
 							second = new IT::Entry;
-							if (first->iddatatype == IT::CH || first->iddatatype == IT::BOOL || first->iddatatype == IT::BYTE) {
+							if (first->iddatatype == IT::CH || first->iddatatype == IT::BOOL) {
 								*out.stream << "movzx eax, " << first->id << "\n";
 							}
-							else if (first->iddatatype == IT::INT) {
+							else if (first->iddatatype == IT::BYTE || first->iddatatype == IT::INT) {
 								*out.stream << "mov eax, " << first->id << "\n";
 							}
 							*out.stream << "mov ebx, 1\n";
@@ -421,16 +334,16 @@ namespace CodeGeneration {
 							break;
 						}
 
-						if (first->iddatatype == IT::CH || first->iddatatype == IT::BOOL || first->iddatatype == IT::BYTE) {
+						if (first->iddatatype == IT::CH || first->iddatatype == IT::BOOL ) {
 							*out.stream << "movzx eax, " << first->id << "\n";
 						}
-						else if (first->iddatatype == IT::INT) {
+						else if (first->iddatatype == IT::INT || first->iddatatype == IT::BYTE) {
 							*out.stream << "mov eax, " << first->id << "\n";
 						}
-						if (second->iddatatype == IT::CH || second->iddatatype == IT::BOOL || second->iddatatype == IT::BYTE) {
+						if (second->iddatatype == IT::CH || second->iddatatype == IT::BOOL) {
 							*out.stream << "movzx ebx, " << second->id << "\n";
 						}
-						else if (second->iddatatype == IT::INT) {
+						else if (second->iddatatype == IT::INT || second->iddatatype == IT::BYTE) {
 							*out.stream << "mov ebx, " << second->id << "\n";
 						}
 						*out.stream << "cmp eax, ebx\n";
@@ -497,7 +410,7 @@ namespace CodeGeneration {
 				IT::Entry* returnValue = &lex.idTable.table[lex.lexTable.table[i + 1].idxTI];
 
 				if (returnValue->iddatatype == IT::BYTE) {
-					// Если тип BYTE
+			
 					if (returnValue->idtype == IT::L) {
 						*out.stream << "movsx eax, " << returnValue->id << "\n"; 
 					}
@@ -506,12 +419,12 @@ namespace CodeGeneration {
 						*out.stream << "mov " << returnValue->id << ", al\n"; 
 					}
 				}
-				else if (returnValue->iddatatype == IT::INT) {
-					// Если тип INT
+				if (returnValue->iddatatype == IT::INT ) {
+	
 					*out.stream << "mov eax, " << returnValue->id << "\n";
 				}
 				else if (returnValue->iddatatype == IT::STR) {
-					// Если тип STR
+					
 					if (returnValue->idtype == IT::L) {
 						*out.stream << "mov eax, OFFSET " << returnValue->id << "\n"; 
 					}
@@ -546,16 +459,12 @@ namespace CodeGeneration {
 					*out.stream << "CALL writestr" << '\n';
 					break;
 				}
-				case (IT::INT): {
+				case IT::BYTE:
+				case IT::INT: {
 					*out.stream << "\nmov eax, " << lex.idTable.table[lex.lexTable.table[i + 2].idxTI].id << "\n"; 
 					*out.stream << "push eax\n";
 					*out.stream << "CALL writeint" << '\n';
-					break;
-				}
-				case (IT::BYTE): {
-					*out.stream << "\nmovsx eax, " << lex.idTable.table[lex.lexTable.table[i + 2].idxTI].id << "\n";
-					*out.stream << "push eax\n";
-					*out.stream << "CALL writeint" << '\n';
+					*out.stream << "pop eax\n";
 					break;
 				}
 				case (IT::BOOL): {
@@ -581,7 +490,7 @@ namespace CodeGeneration {
 					}
 					while (!stackForParams.empty()) {
 						switch (stackForParams.top().iddatatype) {
-						case IT::BYTE:
+			
 						case IT::BOOL:
 						case IT::CH: {
 							*out.stream << "movsx eax, " << stackForParams.top().id << "\n";
@@ -597,10 +506,10 @@ namespace CodeGeneration {
 							}
 							break;
 						}
-
+						case IT::BYTE:
 						case IT::INT: {
-							*out.stream << "mov eax, " << stackForParams.top().id << "\n"; // Прямое перемещение INT
-							*out.stream << "push eax\n"; // Поместить значение на стек
+							*out.stream << "mov eax, " << stackForParams.top().id << "\n"; 
+							*out.stream << "push eax\n"; 
 							break;
 						}
 						}
@@ -610,6 +519,95 @@ namespace CodeGeneration {
 				}
 				break;
 			}
+			}
+		}
+	}
+
+	bool IsIndentifier(const LA::LEX& lex, int i) {
+		return lex.lexTable.table[i].lexema[0] == LEX_ID;
+	}
+
+	bool IsLexemaFunction(const LA::LEX& lex, int i) {
+		return lex.lexTable.table[i].lexema[0] == '@';
+	}
+
+	void Operations(std::ofstream* stream, LT::Entry lexTable) {
+		switch (lexTable.lexema[1]) {
+		case PLUS:
+		{
+			*stream << "pop ebx\n";
+			*stream << "pop eax\n";
+			*stream << "add eax, ebx\n";
+			break;
+		}
+		case MINUS:
+		{
+			*stream << "pop ebx\n";
+			*stream << "pop eax\n";
+			*stream << "sub eax, ebx\n";
+			break;
+		}
+		case STAR:
+		{
+			*stream << "pop ebx\n";
+			*stream << "pop eax\n";
+			*stream << "mul ebx\n";
+			break;
+		}
+		case AMPERSAND:
+		{
+			*stream << "pop ebx\n";
+			*stream << "pop eax\n";
+			*stream << "and eax, ebx\n";
+			break;
+		}
+		case PIPE:
+		{
+			*stream << "pop ebx\n";
+			*stream << "pop eax\n";
+			*stream << "or eax, ebx\n";
+			break;
+		}
+
+		}
+
+		if (lexTable.lexema[0] == TILDE) {
+			*stream << "pop eax\n";
+			*stream << "not eax\n";
+		}
+	}
+
+	void ExpressionHandler(std::ofstream* stream, LA::LEX lex, int startpos, int endpos) {
+		for (int i = startpos; i <= endpos; i++) {
+			if (lex.lexTable.table[i].lexema[0] == '#')
+			{
+				continue;
+			}
+			if (lex.lexTable.table[i].lexema[0] == LEX_ID && lex.lexTable.table[i].lexema[0] != '@' || lex.lexTable.table[i].lexema[0] == LEX_LITERAL) {
+				*stream << "push " << lex.idTable.table[lex.lexTable.table[i].idxTI].id << endl;
+			}
+			else if (lex.lexTable.table[i].lexema[0] == '@') {
+				if (lex.idTable.table[lex.lexTable.table[i].idxTI].idtype == IT::F) {
+					*stream << "call F" << lex.idTable.table[lex.lexTable.table[i].idxTI].id << endl;
+					*stream << "push eax " << endl;
+					i++;
+				}
+				else if (lex.idTable.table[lex.lexTable.table[i].idxTI].idtype == IT::SF){
+					if (!strcmp(lex.idTable.table[lex.lexTable.table[i].idxTI].id, "rest")) {
+						*stream << "CALL rest\n";
+						*stream << "push eax " << endl;
+					}
+					else if (!strcmp(lex.idTable.table[lex.lexTable.table[i].idxTI].id, "module")) {
+						*stream << "CALL module\n";
+						*stream << "push eax " << endl;
+					}
+				}
+
+			}
+
+			else {
+				Operations(stream, lex.lexTable.table[i]);
+				*stream << "push eax" << endl;
 			}
 		}
 	}

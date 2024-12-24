@@ -23,7 +23,6 @@ namespace Log {
 
 		string result;
 		const char* str = c;
-		// Используем va_list для обработки переменного числа параметров
 		va_list args;
 		va_start(args, c);
 
@@ -34,7 +33,6 @@ namespace Log {
 
 		va_end(args);
 
-		// Запись в лог
 		*(log.stream) << result << std::endl;
 	}
 
@@ -43,7 +41,6 @@ namespace Log {
 		std::wstring result;
 		const wchar_t* wstr = c;
 
-		// Используем va_list для обработки переменного числа параметров
 		va_list args;
 		va_start(args, c);
 
@@ -54,13 +51,11 @@ namespace Log {
 
 		va_end(args);
 
-		// Преобразование wchar_t* в char*
 		size_t len = wcstombs(nullptr, result.c_str(), 0);
-		if (len == (size_t)-1) return; // Обработка ошибки преобразования
+		if (len == (size_t)-1) return; 
 		char* cstr = new char[len + 1];
 		wcstombs(cstr, result.c_str(), len + 1);
 
-		// Запись в лог
 		*(log.stream) << cstr << std::endl;
 	}
 
@@ -69,23 +64,20 @@ namespace Log {
 		time_t t = time(nullptr);
 		tm localTime;
 		localtime_s(&localTime, &t);
-		// Форматируем время в строку
 		char timeStr[PARM_MAX_SIZE];
 		strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", &localTime);
-		// Записываем заголовок в протокол
 		*(log.stream) << "---- Протокол ------ " << timeStr << "-------------" << endl;
 	}
 
 	void WriteParm(LOG log, Parm::PARM parm) {
 		char buff[PARM_MAX_SIZE];
 		size_t tsize = 0;
-		//вывод информации о параметрах в поток
 		*log.stream << "----Параметры----" << endl;
-		wcstombs_s(&tsize, buff, parm.log, PARM_MAX_SIZE);  //log
+		wcstombs_s(&tsize, buff, parm.log, PARM_MAX_SIZE);  
 		*log.stream << "-log: " << buff << endl;
-		wcstombs_s(&tsize, buff, parm.out, PARM_MAX_SIZE);  //out
+		wcstombs_s(&tsize, buff, parm.out, PARM_MAX_SIZE);  
 		*log.stream << "-out: " << buff << endl;
-		wcstombs_s(&tsize, buff, parm.in, PARM_MAX_SIZE);  //in
+		wcstombs_s(&tsize, buff, parm.in, PARM_MAX_SIZE); 
 		*log.stream << "-in: " << buff << endl;
 	}
 

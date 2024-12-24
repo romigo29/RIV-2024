@@ -1,6 +1,8 @@
 #pragma once
 #include"stdafx.h"
 #define MAX_LEX_SIZE 4096
+#define MAX_STR_SIZE 258
+#define MAX_CH_SIZE 4
 #define FST_AMOUNT 16
 #define ID_SIZE 9
 
@@ -22,6 +24,8 @@
 #define STAR '*'
 #define EQUAL '='
 #define DIRSLASH '/'
+#define GREATER '>'
+#define LESS '<'
 
 #define FST_BYTE FST::FST _byte(str,\
 	5,\
@@ -179,7 +183,7 @@
 		FST::RELATION('Y', 0), FST::RELATION('Y', 1), FST::RELATION('Z', 0), FST::RELATION('Z', 1), FST::RELATION('0', 1), FST::RELATION('1', 1),\
 		FST::RELATION('2', 1), FST::RELATION('3', 1), FST::RELATION('4', 1),\
 		FST::RELATION('5', 1), FST::RELATION('6', 1), FST::RELATION('7', 1),\
-		FST::RELATION('8', 1), FST::RELATION('9', 1), FST::RELATION('_', 0)),\
+		FST::RELATION('8', 1), FST::RELATION('9', 1), FST::RELATION('_', 1)),\
 	FST::NODE()\
 );
 

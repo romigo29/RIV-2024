@@ -36,9 +36,12 @@ namespace LT
 	}
 	void Delete(lexTable& lexTable)
 	{
-		delete lexTable.table;
-		lexTable.size = 0;
-		lexTable.maxsize = 0;
+		if (lexTable.table != nullptr) {
+			delete[] lexTable.table;
+			lexTable.table = nullptr;
+			lexTable.size = 0;
+			lexTable.maxsize = 0;
+		}
 	}
 
 	void PrintLT(lexTable& lexTable) {
