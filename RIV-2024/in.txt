@@ -10,7 +10,7 @@ main {
 
 let byte yesor = 3 | 5;
 let byte inversion = ~4;
-let byte yesand = getAnd(4, 5) + getAnd(4, 5);
+let byte yesand = getAnd(4, 5);
 
 print(yesor);
 print(inversion);
